@@ -63,6 +63,6 @@ function DashboardContent() {
   );
 }
 
-export default function DashboardEmpresa() {
+export default function DashboardSecretaria() {
   return <DashboardContent />;
 }

@@ -37,6 +37,7 @@ function HeaderUserbox() {
 
   const logout = () => {
     localStorage.removeItem("user");
+    window.location.href = "/login";
   };
 
   const UserAvatar = (props) => {

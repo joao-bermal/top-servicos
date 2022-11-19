@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel
 
 
@@ -6,12 +8,12 @@ class EmpresaBase(BaseModel):
     senha: str
 
 class EmpresaCreate(EmpresaBase):
-    # colocar a senha aqui para que se possa processar (encriptar)
     razao_social: str
     telefone: str
     email: str
 
 class Empresa(EmpresaCreate):
+    id: int
     class Config:
         orm_mode = True
 
@@ -20,18 +22,18 @@ class FuncionarioBase(BaseModel):
     senha: str
     
 class FuncionarioCreate(FuncionarioBase):
-    # colocar a senha aqui para que se possa processar (encriptar)
     nome: str
     telefone: str
     cargo: str
     email: str
 
 class Funcionario(FuncionarioCreate):
+    id: int
     class Config:
         orm_mode = True
 
 class ProcessoBase(BaseModel):
-    nome: str
+    nome: str 
     tipo: str
     status: str
     descricao: str
@@ -41,9 +43,18 @@ class ProcessoCreate(ProcessoBase):
     funcionario_cpf: str
 
 class Processo(ProcessoBase):
-    empresa_id: int
-    funcionario_id: int
+    id: int
+    time_created: datetime
+    empresa_cnpj: str
+    funcionario_cpf: str
     
     class Config:
         orm_mode = True
 
+class ProcessoUpdate(BaseModel):
+    response_type: str
+    updated_field: str
+    updated_value: str
+
+class ProcessoDelete(BaseModel):
+    response_type: str

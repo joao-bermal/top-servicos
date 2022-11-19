@@ -72,8 +72,6 @@ export default function SignInSide() {
         },
       };
 
-    console.log(reqData);
-
     api
       .post(`/login-${reqData.type}`, reqData.credentials)
       .then((response) => {
@@ -140,11 +138,13 @@ export default function SignInSide() {
         >
           <Box
             sx={{
-              my: 11,
               mx: styleProps.marginXRightPanel,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              my: "20%",
+              // justifyContent: "center",
+              // height: "100%",
             }}
           >
             <Avatar
@@ -158,7 +158,6 @@ export default function SignInSide() {
             </Typography>
             <Typography component="h2">
               Faça login na sua conta Top Serviços
-              <br />
             </Typography>
             <Box
               component="form"
@@ -212,7 +211,7 @@ export default function SignInSide() {
                     Esqueceu a senha?
                   </Link>
                 </Grid>
-                <Grid item>
+                {/* <Grid item>
                   <Link href="/cadastro-empresa" variant="body2">
                     {"Não tem uma conta? Cadastre sua empresa"}
                   </Link>
@@ -220,7 +219,7 @@ export default function SignInSide() {
                   <Link href="/cadastro-funcionario" variant="body2">
                     {"Não tem uma conta? Cadastre seu funcionário"}
                   </Link>
-                </Grid>
+                </Grid> */}
               </Grid>
               <Copyright sx={{ mt: 5 }} />
             </Box>

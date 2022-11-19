@@ -1,4 +1,6 @@
-from fastapi import Depends, FastAPI, HTTPException
+from typing import List
+
+from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
@@ -62,6 +64,14 @@ def get_funcionarios(db: Session = Depends(get_db)):
 @app.get("/processos/", response_model=list[schemas.Processo])
 def get_processos(db: Session = Depends(get_db)):
     return crud.get_processos(db=db)
+    
+@app.get("/processos-em-andamento/", response_model=list[schemas.Processo])
+def get_processos(db: Session = Depends(get_db)):
+    return crud.get_processos_em_andamento(db=db)
+
+@app.get("/processos-finalizados/", response_model=list[schemas.Processo])
+def get_processos(db: Session = Depends(get_db)):
+    return crud.get_processos_finalizados(db=db)
 
 @app.post("/add-empresa/", response_model=schemas.Empresa)
 def add_empresa(empresa: schemas.EmpresaCreate, db: Session = Depends(get_db)):
@@ -73,10 +83,21 @@ def add_funcionario(funcionario: schemas.FuncionarioCreate, db: Session = Depend
 
 @app.post("/add-processo/", response_model=schemas.Processo)
 def add_processo(processo: schemas.ProcessoCreate, db: Session = Depends(get_db)):
-    empresa_id = crud.get_empresa_id_by_cnpj(db, cnpj=processo.empresa_cnpj)
-    funcionario_id = crud.get_funcionario_id_by_cpf(db, cpf=processo.funcionario_cpf)
+    return crud.create_processo(db=db, processo=processo)
 
-    return crud.create_processo(db=db, processo=processo, empresa_id=empresa_id, funcionario_id=funcionario_id)
+@app.put("/update_processo/{id}", response_model=list[schemas.Processo])
+def update_processo(id: str, processo: schemas.ProcessoUpdate, db: Session = Depends(get_db)):
+    return crud.update_processo(db=db, processo=processo, id=id)
+
+@app.delete("/delete-processo/{id}", response_model=list[schemas.Processo])
+def delete_processo(processo: schemas.ProcessoDelete, id: str, db: Session = Depends(get_db)):
+    return crud.delete_processo(db=db, id=id, processo=processo)
+
+@app.delete("/delete-processos/")
+def delete_processos(listProcessos: List[int] = Query(None), db: Session = Depends(get_db)):
+    return crud.delete_processos(db=db, listProcessos=listProcessos)
+
+    
 
 
 # if __name__ == "__main__":

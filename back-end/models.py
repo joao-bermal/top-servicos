@@ -39,8 +39,8 @@ class Processo(Base):
     descricao = Column(String)
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
-    empresa_id = Column(Integer, ForeignKey("empresa.id"))
-    funcionario_id = Column(Integer, ForeignKey("funcionario.id"))
+    empresa_cnpj = Column(String, ForeignKey("empresa.cnpj"))
+    funcionario_cpf = Column(String, ForeignKey("funcionario.cpf"))
 
     empresa = relationship("Empresa")
     funcionario = relationship("Funcionario")
