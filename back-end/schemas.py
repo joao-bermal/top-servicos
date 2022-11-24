@@ -31,6 +31,13 @@ class FuncionarioCreate(FuncionarioBase):
     cargo: str
     email: str
 
+class FuncionarioUpdate(BaseModel):
+    id: int
+    nome: str
+    cpf: str
+    email: str
+    telefone: str
+
 class Funcionario(FuncionarioCreate):
     id: int
     class Config:
@@ -66,3 +73,11 @@ class ProcessoUpdate(BaseModel):
 
 # class ProcessoDelete(BaseModel):
 #     response_type: str
+
+class ForgotPassword(BaseModel):
+    user_type: str
+    email: str
+
+class ResetPassword(ForgotPassword):
+    reset_code: str
+    new_password: str

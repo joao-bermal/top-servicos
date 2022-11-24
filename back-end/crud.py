@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlalchemy import delete, or_, update, values
+from sqlalchemy import delete, insert, or_, update, values
 from sqlalchemy.orm import Session
 
 import models
@@ -40,6 +40,13 @@ def get_empresa_by_cnpj(db: Session, cnpj: str):
     
 def get_funcionario_by_cpf(db: Session, cpf: str):
     return db.query(models.Funcionario).filter(models.Funcionario.cpf == cpf).first()
+
+def check_email_exists(db: Session, request: schemas.ForgotPassword):
+    user_type = request.user_type
+    if user_type == "Funcionario":
+        return db.query(models.Funcionario).filter(models.Funcionario.email == request.email).first()
+    
+    return db.query(models.Empresa).filter(models.Empresa.email == request.email).first()
 
 def authenticate_empresa(cnpj: str, senha: str, db: Session):
     user = get_empresa_by_cnpj(cnpj=cnpj, db=db)
@@ -84,6 +91,15 @@ def create_funcionario(db: Session, funcionario: schemas.FuncionarioCreate):
     db.commit()
     db.refresh(db_funcionario)
     return db_funcionario
+
+def update_funcionario(db: Session, funcionario: schemas.FuncionarioUpdate):
+    db.execute(
+        update(models.Funcionario)
+        .where(models.Funcionario.id == funcionario.id)
+        .values(nome = funcionario.nome, cpf = funcionario.cpf, email = funcionario.email, telefone = funcionario.telefone)
+    )
+    db.commit()
+    return {"Message": "Funcionario successfully updated"}
 
 def create_processo(db: Session, processo: schemas.ProcessoCreate):
     db_processo = models.Processo(
@@ -150,3 +166,23 @@ def delete_processos(db: Session, listProcessos: List[int]):
     db.commit()
     
     return get_processos(db=db)
+
+def create_reset_code(db: Session, email: str, reset_code: str):
+    db.execute(insert(models.ForgotPassword).values(email = email, reset_code = reset_code, status = "1"))
+    db.commit()
+
+    return {"message": "reset code successfully created"}
+
+def verify_reset_code(db: Session, reset_code: str):
+    response = db.query(models.ForgotPassword).filter(models.ForgotPassword.reset_code == reset_code).first()
+    if response:
+        return True
+    return False
+
+def reset_password(db: Session, request: schemas.ResetPassword):
+    if request.user_type == "Empresa":
+        db.execute(update(models.Empresa).where(models.Empresa.email == request.email).values(senha=request.new_password))
+
+    db.execute(update(models.Funcionario).where(models.Funcionario.email == request.email).values(senha=request.new_password))
+    db.commit()
+    return {"message": "password successfully changed!"}

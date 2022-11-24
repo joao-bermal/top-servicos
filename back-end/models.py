@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, Sequence, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -44,3 +44,11 @@ class Processo(Base):
 
     empresa = relationship("Empresa")
     funcionario = relationship("Funcionario")
+
+class ForgotPassword(Base):
+    __tablename__ = "forgotPassword"
+    id = Column(Integer, primary_key=True)
+    email = Column(String)
+    reset_code = Column(String)
+    status = Column(String(1))
+    expired_in = Column(DateTime(timezone=True), server_default=func.now())

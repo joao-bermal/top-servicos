@@ -14,6 +14,8 @@ import LoginRoute from "./Routes/Login";
 import CadastroEmpresaRoute from "./Routes/CadastroEmpresa";
 import CadastroFuncionarioRoute from "./Routes/CadastroFuncionario";
 import DashboardRoute from "./Routes/Dashboard";
+import AccountRoute from "./Routes/Account";
+import PasswordRoute from "./Routes/Password";
 import LoginAuth from "./Pages/Login/LoginAuth";
 import RequireAuth from "./Pages/Login/RequireAuth";
 
@@ -26,6 +28,14 @@ const store = configureStore({
 });
 
 const mdTheme = createTheme();
+
+// const mdTheme = createTheme({
+//   palette: {
+//     primary: {
+//       main: "#555555",
+//     },
+//   },
+// });
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
@@ -53,6 +63,22 @@ root.render(
               element={
                 <RequireAuth>
                   <DashboardRoute />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="account"
+              element={
+                <RequireAuth>
+                  <AccountRoute />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="account/password"
+              element={
+                <RequireAuth>
+                  <PasswordRoute />
                 </RequireAuth>
               }
             />

@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 
 import Header from "../../Components/Global/Header";
-import ChangeProfileData from "../../Components/Global/Account/Content/ChangeProfileData";
+import ChangePassword from "../../Components/Global/Account/Content/ChangePassword";
 import Copyright from "../../Components/Copyright";
 
 function DashboardContent() {
@@ -50,7 +50,7 @@ function DashboardContent() {
                   height: "100%",
                 }}
               >
-                <ChangeProfileData />
+                <ChangePassword />
               </Paper>
             </Grid>
           </Grid>

@@ -16,14 +16,14 @@ const Drawer = styled(MuiDrawer, {
     width: drawerWidth,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+      duration: 200,
     }),
     boxSizing: "border-box",
     ...(!open && {
       overflowX: "hidden",
       transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
+        duration: 200,
       }),
       width: theme.spacing(7),
       [theme.breakpoints.up("sm")]: {

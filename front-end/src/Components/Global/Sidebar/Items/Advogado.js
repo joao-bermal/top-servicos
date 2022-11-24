@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDispatch } from "react-redux";
-import { onChangeContent } from "../../../features/selectedContent";
+import { onChangeContent } from "../../../../features/selectedContent";
 
 import {
   ListItemButton,
@@ -11,9 +11,9 @@ import {
 
 import { Dashboard, ManageSearch, AddCircle } from "@mui/icons-material";
 
-const Items = () => {
+const AdvogadoItems = () => {
   const dispatch = useDispatch();
-  const [isContentSelected, setIscontentSelected] = React.useState({
+  const [isContentSelected, setIsContentSelected] = React.useState({
     emAndamento: true,
     historico: false,
     novoProcesso: false,
@@ -26,7 +26,7 @@ const Items = () => {
       novoProcesso: false,
     };
     newState[identifier] = true;
-    setIscontentSelected(newState);
+    setIsContentSelected(newState);
   };
 
   return (
@@ -73,4 +73,4 @@ const Items = () => {
     </React.Fragment>
   );
 };
-export default Items;
+export default AdvogadoItems;

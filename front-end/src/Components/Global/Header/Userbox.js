@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-
 import { NavLink } from "react-router-dom";
+import MobileList from "./MobileList";
+import DesktopList from "./DesktopList";
 
 import {
   Avatar,
@@ -22,10 +23,14 @@ import ExpandMoreTwoToneIcon from "@mui/icons-material/ExpandMoreTwoTone";
 import LockOpenTwoToneIcon from "@mui/icons-material/LockOpenTwoTone";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useNavigate } from "react-router-dom";
+
+import isMobile from "../../../Utils/isMobile";
 
 function HeaderUserbox() {
   const data = JSON.parse(localStorage.getItem("user"));
   const [isOpen, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleOpen = () => {
     setOpen(true);
@@ -37,7 +42,7 @@ function HeaderUserbox() {
 
   const logout = () => {
     localStorage.removeItem("user");
-    window.location.href = "/login";
+    navigate("/login");
   };
 
   const UserAvatar = (props) => {
@@ -136,18 +141,7 @@ function HeaderUserbox() {
         </Box>
         <Divider sx={{ mb: 0 }} />
         <List sx={{ p: 1 }} component="nav">
-          <ListItem button to="/dashboard" component={NavLink}>
-            <DashboardIcon fontSize="small" />
-            <ListItemText sx={{ marginLeft: 1 }} primary="Painel" />
-          </ListItem>
-          <ListItem button to="/management/transactions" component={NavLink}>
-            <AccountCircleIcon fontSize="small" />
-            <ListItemText sx={{ marginLeft: 1 }} primary="Minha Conta" />
-          </ListItem>
-          {/* <ListItem button to="/management/user" component={NavLink}>
-                <AccountBoxTwoToneIcon fontSize="small" />
-                <ListItemText primary="Perfil" />
-              </ListItem> */}
+          {isMobile() ? <MobileList /> : <DesktopList />}
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>

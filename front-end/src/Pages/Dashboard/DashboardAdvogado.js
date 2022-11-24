@@ -8,8 +8,8 @@ import {
   Paper,
 } from "@mui/material";
 
-import Header from "../../Components/Advogado/Header";
-import Sidebar from "../../Components/Advogado/Sidebar";
+import Header from "../../Components/Global/Header";
+import Sidebar from "../../Components/Global/Sidebar";
 import MainContent from "../../Components/Advogado/Dashboard/MainContent";
 import Copyright from "../../Components/Copyright";
 
@@ -21,7 +21,7 @@ function DashboardContent() {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <Header toggleDrawer={toggleDrawer} />
+      <Header />
       <Sidebar open={open} />
       <Box
         component="main"

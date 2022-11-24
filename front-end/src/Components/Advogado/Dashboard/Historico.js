@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { onChangeSelection } from "../../../features/selectedRows";
 import { onHandleUpdate } from "../../../features/handleUpdate";
 
-import Title from "./Title";
+import Title from "../../Global/Title/index.js";
 import { Box, IconButton, Snackbar, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";

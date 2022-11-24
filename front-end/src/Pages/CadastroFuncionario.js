@@ -17,40 +17,26 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
 import useWindowSize from "../Utils/useWindowSize";
+import Copyright from "../Components/Copyright";
+
 import { cpf } from "cpf-cnpj-validator";
 import { cpfMask, telefoneMask } from "../Utils/masks";
 
 import axios from "axios";
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Top Serviços
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
 const theme = createTheme();
 
 export default function SignInSide() {
-  const [marginXRightPanel, setMarginXRightPanel] = useState(8);
-  const [leftPanelDisplaySettings, setLeftPanelDisplaySettings] =
-    useState("flex");
+  const [isMobile, setIsMobile] = useState(false);
+  const [styleProps, setStyleProps] = useState({
+    marginXRightPanel: 8,
+    display: "flex",
+  });
   const [formValues, setFormValues] = useState({
     cpf: "",
     nome: "",
     telefone: "",
-    cargo: "",
+    cargo: 0,
     email: "",
     senha: "",
     confirmaSenha: "",
@@ -62,16 +48,6 @@ export default function SignInSide() {
   });
 
   const size = useWindowSize();
-
-  useEffect(() => {
-    if (size.width < 600) {
-      setLeftPanelDisplaySettings("none");
-      setMarginXRightPanel(4);
-    } else {
-      setLeftPanelDisplaySettings("flex");
-      setMarginXRightPanel(8);
-    }
-  }, [size.width]);
 
   const handleFormChange = (value, identifier) => {
     let newForm = { ...formValues };
@@ -102,36 +78,60 @@ export default function SignInSide() {
     else setErrorMessage("Dados Inválidos. Tente novamente!");
   };
 
+  useEffect(() => {
+    if (size.width < size.height) {
+      setIsMobile(true);
+      setStyleProps({ marginXRightPanel: 2, display: "flex" });
+    } else {
+      setIsMobile(false);
+      if (size.width < 900)
+        setStyleProps({ marginXRightPanel: 8, display: "none" });
+      else setStyleProps({ marginXRightPanel: 8, display: "flex" });
+    }
+  }, [size]);
+
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: "100vh" }}>
-        {console.log(errorMessage)}
         <CssBaseline />
+
+        {isMobile == false && (
+          <Grid item xs={false} sm={4} md={6}>
+            <div
+              style={{
+                position: "fixed",
+                width: "50%",
+                height: "100%",
+                backgroundRepeat: "no-repeat",
+                backgroundColor: "#000000",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                display: styleProps.display,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                src="logo.png"
+                style={{ width: "35%", height: "28%", alignSelf: "center" }}
+              />
+            </div>
+          </Grid>
+        )}
+
         <Grid
           item
-          xs={false}
-          sm={4}
+          xs={12}
+          sm={12}
           md={6}
-          sx={{
-            backgroundRepeat: "no-repeat",
-            backgroundColor: "#000000",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            display: leftPanelDisplaySettings,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+          component={Paper}
+          elevation={6}
+          square
         >
-          <img
-            src="logo.png"
-            style={{ width: "35%", height: "28%", alignSelf: "center" }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
           <Box
             sx={{
               my: 11,
-              mx: marginXRightPanel,
+              mx: styleProps.marginXRightPanel,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -140,10 +140,7 @@ export default function SignInSide() {
             <Avatar
               sx={{ m: 1, bgcolor: "#ffffff", width: "20%", height: "15%" }}
             >
-              <img
-                src="white-logo.png"
-                style={{ width: "100%", height: "90%" }}
-              />
+              <img src="white-logo.png" style={{ width: "65%" }} />
             </Avatar>
             <Typography component="h1" variant="h5">
               Bem-vindo!
@@ -203,11 +200,12 @@ export default function SignInSide() {
               />
               <Select
                 margin="normal"
-                required
+                // required
                 fullWidth
                 id="role"
-                defaultValue={""}
-                sx={{ mt: 2, mb: 1 }}
+                // defaultValue={"Cargo"}
+                value={formValues.cargo}
+                sx={{ mt: 2, mb: 1, color: "inherit" }}
                 onChange={(event) => {
                   handleFormChange(event.target.value, "cargo");
                 }}

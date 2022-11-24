@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 
-import Title from "./Title";
+import Title from "../../Global/Title/index.js";
 import {
   Box,
   Button,
@@ -42,13 +42,13 @@ export default function NovoProcesso() {
     setFormValues(newForm);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    let newForm = { ...formValues };
-    newForm["empresa_cnpj"] = formValues.empresa_cnpj.slice(0, 18);
-    newForm["funcionario_cpf"] = formValues.funcionario_cpf.slice(0, 14);
-    setFormValues(newForm);
-
+    // let newForm = { ...formValues };
+    // newForm["empresa_cnpj"] = formValues.empresa_cnpj.slice(0, 18);
+    // newForm["funcionario_cpf"] = formValues.funcionario_cpf.slice(0, 14);
+    // // debugger;
+    // setFormValues(newForm);
     if (
       formValues.nome != "" &&
       formValues.tipo != "" &&
@@ -56,7 +56,7 @@ export default function NovoProcesso() {
       formValues.empresa_cnpj != "" &&
       formValues.funcionario_cpf != ""
     )
-      api
+      await api
         .post("/add-processo", formValues)
         .then((response) => {
           return setOpen(true);
@@ -161,7 +161,7 @@ export default function NovoProcesso() {
             id="empresa_cnpj"
             options={empresas}
             onChange={(event, newValue) => {
-              handleFormChange(newValue, "empresa_cnpj");
+              handleFormChange(newValue.slice(0, 18), "empresa_cnpj");
             }}
             renderInput={(params) => (
               <TextField {...params} label="CNPJ da empresa" />
@@ -175,7 +175,7 @@ export default function NovoProcesso() {
             id="funcionario_cpf"
             options={advogados}
             onChange={(event, newValue) => {
-              handleFormChange(newValue, "funcionario_cpf");
+              handleFormChange(newValue.slice(0, 14), "funcionario_cpf");
             }}
             renderInput={(params) => (
               <TextField {...params} label="CPF do advogado encarregado" />
@@ -185,6 +185,7 @@ export default function NovoProcesso() {
             type="submit"
             variant="contained"
             sx={{ mt: 5, mb: 2, backgroundColor: "#000000", width: "90%" }}
+            onClick={handleSubmit}
           >
             Criar
           </Button>

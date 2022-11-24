@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 import { onHandleUpdate } from "../../../features/handleUpdate";
 
-import Title from "./Title";
+import Title from "../../Global/Title/index.js";
 import { Box, IconButton, Snackbar, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
@@ -38,6 +38,7 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
+      editable: true,
     },
     {
       field: "tipo",
@@ -45,6 +46,7 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
+      editable: true,
     },
     {
       field: "status",
@@ -62,6 +64,7 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
+      editable: true,
     },
     {
       field: "empresa_cnpj",
@@ -69,6 +72,7 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
+      editable: true,
     },
     {
       field: "funcionario_cpf",
@@ -76,6 +80,7 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
+      editable: true,
     },
     {
       field: "time_created",
@@ -83,6 +88,7 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
+      editable: true,
       valueGetter: (params) =>
         new Date(params.row.time_created).toLocaleDateString(),
     },
@@ -172,6 +178,8 @@ export default function Historico() {
       <Title>Processos em andamento</Title>
       <Box sx={{ mt: 2, height: "90%", width: "100%" }}>
         <DataGrid
+          columnBuffer={2}
+          columnThreshold={2}
           density="comfortable"
           rows={rows}
           columns={columns}

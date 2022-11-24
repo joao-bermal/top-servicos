@@ -43,6 +43,8 @@ export default function SignInSide() {
     baseURL: "http://localhost:8000",
   });
 
+  const size = useWindowSize();
+
   const handleFormChange = (value, identifier) => {
     let newForm = { ...formValues };
     newForm[identifier] = value;
@@ -72,8 +74,6 @@ export default function SignInSide() {
         });
     else setErrorMessage("Dados Inválidos. Tente novamente!");
   };
-
-  const size = useWindowSize();
 
   useEffect(() => {
     if (size.width < size.height) {
