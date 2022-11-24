@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
@@ -13,16 +14,24 @@ import {
   GridToolbarDensitySelector,
 } from "@mui/x-data-grid";
 
-import { Button } from "@mui/material";
+import { Button, Snackbar, Alert } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const CustomToolbar = () => {
+  const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
 
   const selectedRows = useSelector((state) => state.selectedRows.value);
   const api = axios.create({
     baseURL: "http://localhost:8000",
   });
+
+  const handleCloseDelete = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
 
   const getParamsUrl = (array) => {
     let paramsUrl = "";
@@ -35,7 +44,7 @@ const CustomToolbar = () => {
       .delete(`/delete-processos/?${getParamsUrl(selectedRows)}`)
       .then((response) => {
         dispatch(onHandleUpdate());
-        return;
+        return setOpen(true);
       })
       .catch((error) => {
         console.log(error);
@@ -69,6 +78,21 @@ const CustomToolbar = () => {
       >
         Delete
       </Button>
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={handleCloseDelete}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseDelete}
+          variant="filled"
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Campos deletados com sucesso!
+        </Alert>
+      </Snackbar>
     </GridToolbarContainer>
   );
 };

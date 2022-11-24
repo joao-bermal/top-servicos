@@ -48,6 +48,7 @@ function DashboardContent() {
                   p: 4,
                   display: "flex",
                   flexDirection: "column",
+                  alignItems: "center",
                   height: "100%",
                 }}
               >

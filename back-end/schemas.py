@@ -17,6 +17,10 @@ class Empresa(EmpresaCreate):
     class Config:
         orm_mode = True
 
+class EmpresaNomeCnpj(BaseModel):
+    razao_social: str
+    cnpj: str
+
 class FuncionarioBase(BaseModel):
     cpf: str
     senha: str
@@ -31,6 +35,10 @@ class Funcionario(FuncionarioCreate):
     id: int
     class Config:
         orm_mode = True
+
+class FuncionarioNomeCpf(BaseModel):
+    nome: str
+    cpf: str
 
 class ProcessoBase(BaseModel):
     nome: str 
@@ -52,9 +60,9 @@ class Processo(ProcessoBase):
         orm_mode = True
 
 class ProcessoUpdate(BaseModel):
-    response_type: str
+    # response_type: str
     updated_field: str
     updated_value: str
 
-class ProcessoDelete(BaseModel):
-    response_type: str
+# class ProcessoDelete(BaseModel):
+#     response_type: str

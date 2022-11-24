@@ -10,8 +10,14 @@ import schemas
 def get_empresas(db: Session):
     return db.query(models.Empresa).order_by(models.Empresa.id).all()
 
+def get_empresas_nome_cnpj(db: Session):
+    return db.query(models.Empresa.razao_social, models.Empresa.cnpj).order_by(models.Empresa.id).all()
+
 def get_funcionarios(db: Session):
     return db.query(models.Funcionario).order_by(models.Funcionario.id).all()
+
+def get_advogados_nome_cpf(db: Session):
+    return db.query(models.Funcionario.nome, models.Funcionario.cpf).filter(models.Funcionario.cargo == "Advogado").order_by(models.Funcionario.id).all()
 
 def get_processos(db: Session):
     return db.query(models.Processo).order_by(models.Processo.id).all()
@@ -80,10 +86,6 @@ def create_funcionario(db: Session, funcionario: schemas.FuncionarioCreate):
     return db_funcionario
 
 def create_processo(db: Session, processo: schemas.ProcessoCreate):
-    dadosEmpresa = get_dados_empresa_by_cnpj(db, cnpj=processo.empresa_cnpj)
-    dadosFuncionario = get_dados_funcionario_by_cpf(db, cpf=processo.funcionario_cpf)
-    print(dadosEmpresa)
-    print(dadosFuncionario)
     db_processo = models.Processo(
         nome=processo.nome,
         tipo=processo.tipo,
@@ -136,21 +138,15 @@ def update_processo(db: Session, processo: schemas.ProcessoUpdate, id: str):
         )
     
     db.commit()
-    if processo.response_type == "finalizados":
-        return get_processos_finalizados(db=db)
-    
-    return get_processos_em_andamento(db=db)
+    return get_processos(db=db)
 
-def delete_processo(db: Session, id: str, processo: schemas.ProcessoDelete):
+def delete_processo(db: Session, id: str):
     db.execute(delete(models.Processo).where(models.Processo.id == id))
     db.commit()
-    if processo.response_type == "finalizados":
-        return get_processos_finalizados(db=db)
-
-    return get_processos_em_andamento(db=db)
+    return get_processos(db=db)
 
 def delete_processos(db: Session, listProcessos: List[int]):
     db.execute(delete(models.Processo).where(models.Processo.id.in_(listProcessos)))
     db.commit()
     
-    return get_processos_finalizados(db=db)
+    return get_processos(db=db)

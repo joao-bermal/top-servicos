@@ -4,9 +4,10 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
 import { onChangeSelection } from "../../../features/selectedRows";
+import { onHandleUpdate } from "../../../features/handleUpdate";
 
 import Title from "./Title";
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Snackbar, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
@@ -15,6 +16,7 @@ import CustomToolbar from "./CustomToolbar";
 
 export default function Historico() {
   const [rows, setRows] = useState([]);
+  const [open, setOpen] = useState({ update: false, delete: false });
 
   const dispatch = useDispatch();
   const selectedRows = useSelector((state) => state.selectedRows.value);
@@ -103,8 +105,16 @@ export default function Historico() {
             .forEach(
               (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
             );
-
-          return alert(JSON.stringify(thisRow, null, 4));
+          api
+            .delete(`/delete-processo/${thisRow.id}`)
+            .then((response) => {
+              dispatch(onHandleUpdate());
+              return setOpenValue("delete", true);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          // return alert(JSON.stringify(thisRow, null, 4));
         };
 
         return (
@@ -116,17 +126,37 @@ export default function Historico() {
     },
   ];
 
+  const setOpenValue = (identifier, value) => {
+    let newValue = { ...open };
+    newValue[identifier] = value;
+    setOpen(newValue);
+  };
+
+  const handleCloseUpdate = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenValue("update", false);
+  };
+
+  const handleCloseDelete = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenValue("delete", false);
+  };
+
   const handleRowEditCommit = async (params) => {
     const updatedValues = {
-      response_type: "finalizados",
+      // response_type: "finalizados",
       updated_field: params.field,
       updated_value: params.value,
     };
     api
       .put(`/update_processo/${params.id}`, updatedValues)
       .then((response) => {
-        setRows(response.data);
-        return;
+        dispatch(onHandleUpdate());
+        return setOpenValue("update", true);
       })
       .catch((error) => {
         console.log(error);
@@ -144,7 +174,7 @@ export default function Historico() {
       <Title>Processos finalizados</Title>
       <Box sx={{ mt: 2, height: "90%", width: "100%" }}>
         <DataGrid
-          // density="compact"
+          density="comfortable"
           rows={rows}
           columns={columns}
           checkboxSelection
@@ -158,6 +188,36 @@ export default function Historico() {
             Toolbar: CustomToolbar,
           }}
         />
+        <Snackbar
+          open={open.update}
+          autoHideDuration={3000}
+          onClose={handleCloseUpdate}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert
+            onClose={handleCloseUpdate}
+            variant="filled"
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            Campo atualizado com sucesso!
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={open.delete}
+          autoHideDuration={3000}
+          onClose={handleCloseDelete}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert
+            onClose={handleCloseDelete}
+            variant="filled"
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            Campo deletado com sucesso!
+          </Alert>
+        </Snackbar>
       </Box>
     </>
   );

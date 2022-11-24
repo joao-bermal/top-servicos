@@ -29,7 +29,7 @@ const mdTheme = createTheme();
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-  <React.StrictMode>
+  <>
     <ThemeProvider theme={mdTheme}>
       <Provider store={store}>
         <BrowserRouter>
@@ -60,5 +60,5 @@ root.render(
         </BrowserRouter>
       </Provider>
     </ThemeProvider>
-  </React.StrictMode>
+  </>
 );

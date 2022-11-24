@@ -140,7 +140,7 @@ function HeaderUserbox() {
             <DashboardIcon fontSize="small" />
             <ListItemText sx={{ marginLeft: 1 }} primary="Painel" />
           </ListItem>
-          <ListItem button to="/management/transactions" component={NavLink}>
+          <ListItem button to="/account" component={NavLink}>
             <AccountCircleIcon fontSize="small" />
             <ListItemText sx={{ marginLeft: 1 }} primary="Minha Conta" />
           </ListItem>

@@ -193,10 +193,10 @@ export default function SignInSide() {
                   handleFormChange(event.target.value, "senha");
                 }}
               />
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Lembre-se de mim"
-              />
+              /> */}
               <Button
                 type="submit"
                 fullWidth

@@ -57,9 +57,17 @@ def authenticate(funcionario: schemas.FuncionarioBase, db: Session = Depends(get
 def get_empresas(db: Session = Depends(get_db)):
     return crud.get_empresas(db=db)
 
+@app.get("/empresas-nome-cnpj/", response_model=list[schemas.EmpresaNomeCnpj])
+def get_empresas_nome_cnpj(db: Session = Depends(get_db)):
+    return crud.get_empresas_nome_cnpj(db=db)
+
 @app.get("/funcionarios/", response_model=list[schemas.Funcionario])
 def get_funcionarios(db: Session = Depends(get_db)):
     return crud.get_funcionarios(db=db)
+
+@app.get("/advogados-nome-cpf/", response_model=list[schemas.FuncionarioNomeCpf])
+def get_advogados_nome_cpf(db: Session = Depends(get_db)):
+    return crud.get_advogados_nome_cpf(db=db)
 
 @app.get("/processos/", response_model=list[schemas.Processo])
 def get_processos(db: Session = Depends(get_db)):
@@ -90,8 +98,8 @@ def update_processo(id: str, processo: schemas.ProcessoUpdate, db: Session = Dep
     return crud.update_processo(db=db, processo=processo, id=id)
 
 @app.delete("/delete-processo/{id}", response_model=list[schemas.Processo])
-def delete_processo(processo: schemas.ProcessoDelete, id: str, db: Session = Depends(get_db)):
-    return crud.delete_processo(db=db, id=id, processo=processo)
+def delete_processo(id: str, db: Session = Depends(get_db)):
+    return crud.delete_processo(db=db, id=id)
 
 @app.delete("/delete-processos/")
 def delete_processos(listProcessos: List[int] = Query(None), db: Session = Depends(get_db)):
