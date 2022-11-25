@@ -10,7 +10,7 @@ import {
 
 import Header from "../../Components/Global/Header";
 import ChangePassword from "../../Components/Global/Account/Content/ChangePassword";
-import Copyright from "../../Components/Copyright";
+import Copyright from "../../Components/Global/Copyright";
 
 function DashboardContent() {
   const [open, setOpen] = useState(true);

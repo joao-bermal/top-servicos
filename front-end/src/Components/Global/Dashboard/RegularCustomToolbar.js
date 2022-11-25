@@ -11,8 +11,8 @@ const RegularCustomToolbar = () => {
     <GridToolbarContainer
       sx={{
         display: "flex",
-        justifyContent: "space-evenly",
-        width: "32%",
+        flexFlow: "row wrap",
+        alignContent: "flex-start",
         m: 1,
       }}
     >

@@ -54,8 +54,8 @@ const CustomToolbar = () => {
     <GridToolbarContainer
       sx={{
         display: "flex",
-        justifyContent: "space-evenly",
-        width: "40%",
+        flexFlow: "row wrap",
+        alignContent: "flex-start",
         m: 1,
       }}
     >
@@ -76,7 +76,7 @@ const CustomToolbar = () => {
         startIcon={<DeleteIcon />}
         onClick={toggleDeleteRows}
       >
-        Delete
+        Deletar
       </Button>
       <Snackbar
         open={open}

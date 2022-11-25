@@ -47,6 +47,7 @@ class FuncionarioNomeCpf(BaseModel):
     nome: str
     cpf: str
 
+
 class ProcessoBase(BaseModel):
     nome: str 
     tipo: str
@@ -81,3 +82,8 @@ class ForgotPassword(BaseModel):
 class ResetPassword(ForgotPassword):
     reset_code: str
     new_password: str
+
+class UserUpdatePass(BaseModel):
+    id: int
+    new_password: str
+    user_type: str

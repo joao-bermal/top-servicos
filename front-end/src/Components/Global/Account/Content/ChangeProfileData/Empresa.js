@@ -15,24 +15,23 @@ import {
 } from "@mui/material";
 import { Edit } from "@mui/icons-material/";
 import axios from "axios";
+import updateStorage from "../../../../../Utils/updateStorage";
 
 import Title from "../../../../Global/Title";
 import { telefoneMask } from "../../../../../Utils/masks";
 import { useNavigate } from "react-router-dom";
 
-export default function ChangeProfileDataAdvogado() {
+export default function ChangeProfileDataEmpresa() {
   const [formValues, setFormValues] = useState({
     id: JSON.parse(localStorage.getItem("user")).id,
-    cpf: JSON.parse(localStorage.getItem("user")).cpf,
-    cargo: JSON.parse(localStorage.getItem("user")).cargo,
-    nome: JSON.parse(localStorage.getItem("user")).nome,
+    cnpj: JSON.parse(localStorage.getItem("user")).cnpj,
+    razaoSocial: JSON.parse(localStorage.getItem("user")).razao_social,
     email: JSON.parse(localStorage.getItem("user")).email,
     telefone: JSON.parse(localStorage.getItem("user")).telefone,
   });
   const [disabled, setDisabled] = useState({
-    cpf: true,
-    nome: true,
-    cargo: true,
+    cnpj: true,
+    razaoSocial: true,
     email: true,
     telefone: true,
   });
@@ -67,13 +66,14 @@ export default function ChangeProfileDataAdvogado() {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (
-      formValues.nome != "" &&
+      formValues.razaoSocial != "" &&
       formValues.email != "" &&
       formValues.telefone != ""
     )
       api
-        .post("/update-funcionario", formValues)
+        .post("/update-empresa", formValues)
         .then((response) => {
+          updateStorage();
           return setOpen(true);
         })
         .catch((error) => {
@@ -107,47 +107,33 @@ export default function ChangeProfileDataAdvogado() {
           }}
         >
           <TextField
-            disabled={disabled.cpf}
+            disabled={disabled.cnpj}
             margin="normal"
             required
             sx={{ width: "90%" }}
-            id="cpf"
-            label="CPF"
-            name="cpf"
-            autoComplete="cpf"
-            value={formValues.cpf}
+            id="cnpj"
+            label="CNPJ"
+            name="cnpj"
+            autoComplete="cnpj"
+            value={formValues.cnpj}
             onChange={(event) => {
-              handleFormChange(event.target.value, "cpf");
-            }}
-          />
-          <TextField
-            disabled={disabled.cargo}
-            margin="normal"
-            required
-            sx={{ width: "90%" }}
-            id="cargo"
-            label="Cargo"
-            name="cargo"
-            autoComplete="cargo"
-            value={formValues.cargo}
-            onChange={(event) => {
-              handleFormChange(event.target.value, "cargo");
+              handleFormChange(event.target.value, "cnpj");
             }}
           />
           <TextField
             color="primary"
-            disabled={disabled.nome}
+            disabled={disabled.razaoSocial}
             margin="normal"
             required
             sx={{ width: "90%" }}
             id="name"
-            label="Nome"
+            label="Razão Social"
             name="name"
             autoComplete="name"
             autoFocus
-            value={formValues.nome}
+            value={formValues.razaoSocial}
             onChange={(event) => {
-              handleFormChange(event.target.value, "nome");
+              handleFormChange(event.target.value, "razaoSocial");
             }}
             InputProps={{
               endAdornment: (
@@ -155,7 +141,7 @@ export default function ChangeProfileDataAdvogado() {
                   <IconButton
                     edge="end"
                     color="inherit"
-                    onClick={() => handleEnable("nome")}
+                    onClick={() => handleEnable("razaoSocial")}
                   >
                     <Edit />
                   </IconButton>
@@ -253,21 +239,6 @@ export default function ChangeProfileDataAdvogado() {
               sx={{ width: "100%" }}
             >
               Dados alterados com sucesso!
-            </Alert>
-          </Snackbar>
-          <Snackbar
-            open={open}
-            autoHideDuration={3000}
-            onClose={handleClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-          >
-            <Alert
-              onClose={handleClose}
-              variant="filled"
-              severity="success"
-              sx={{ width: "100%" }}
-            >
-              Link enviado para o email!
             </Alert>
           </Snackbar>
         </Box>

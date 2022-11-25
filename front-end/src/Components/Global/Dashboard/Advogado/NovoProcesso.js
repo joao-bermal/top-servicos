@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 
-import Title from "../../Global/Title/index.js";
+import Title from "../../Title";
 import {
   Box,
   Button,

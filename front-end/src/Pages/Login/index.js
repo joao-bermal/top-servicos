@@ -15,7 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import useWindowSize from "../../Utils/useWindowSize";
 import { cpfCnpjMask } from "../../Utils/masks";
-import Copyright from "../../Components/Copyright";
+import Copyright from "../../Components/Global/Copyright";
 
 import axios from "axios";
 

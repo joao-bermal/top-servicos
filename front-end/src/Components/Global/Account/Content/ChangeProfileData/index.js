@@ -1,10 +1,10 @@
-import ChangeProfileDataAdvogado from "./Advogado";
+import ChangeProfileDataFuncionario from "./Funcionario";
+import ChangeProfileDataEmpresa from "./Empresa";
+import getUserType from "../../../../../Utils/getUserType";
 
 const ChangeProfileData = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  if (user.cargo == "Advogado") return <ChangeProfileDataAdvogado />;
-  // else if (user.cargo == "Secretária") return <DashboardSecretaria />;
-  // return <DashboardEmpresa />;
+  if (getUserType() == "Funcionário") <ChangeProfileDataFuncionario />;
+  else return <ChangeProfileDataEmpresa />;
 };
 
 export default ChangeProfileData;

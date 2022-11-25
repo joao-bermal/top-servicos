@@ -17,7 +17,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
 import useWindowSize from "../Utils/useWindowSize";
-import Copyright from "../Components/Copyright";
+import Copyright from "../Components/Global/Copyright";
 
 import { cpf } from "cpf-cnpj-validator";
 import { cpfMask, telefoneMask } from "../Utils/masks";

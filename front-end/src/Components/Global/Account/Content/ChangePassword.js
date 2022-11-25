@@ -14,7 +14,10 @@ import {
   Link,
 } from "@mui/material";
 import { Edit } from "@mui/icons-material/";
+import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
+import updateStorage from "../../../../Utils/updateStorage";
 
 import Title from "../../../Global/Title";
 
@@ -28,6 +31,8 @@ export default function ChangePassword() {
   const [errorMessage, setErrorMessage] = useState("");
   const [open, setOpen] = useState(false);
 
+  const navigate = useNavigate();
+
   const api = axios.create({
     baseURL: "http://localhost:8000",
   });
@@ -37,6 +42,7 @@ export default function ChangePassword() {
       return;
     }
     setOpen(false);
+    navigate("/dashboard");
   };
 
   const handleFormChange = (value, identifier) => {
@@ -47,20 +53,33 @@ export default function ChangePassword() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const user = JSON.parse(localStorage.getItem("user"));
+    let userType = "";
+    user.cargo == "Advogado" || user.cargo == "Secretária"
+      ? (userType = "Funcionário")
+      : (userType = "Empresa");
     if (
-      formValues.nome != "" &&
-      formValues.email != "" &&
-      formValues.telefone != ""
-    )
+      formValues.senhaAtual != "" &&
+      formValues.novaSenha != "" &&
+      formValues.confirmarNovaSenha != "" &&
+      formValues.novaSenha == formValues.confirmarNovaSenha &&
+      formValues.senhaAtual == user.senha
+    ) {
+      const reqValues = {
+        id: user.id,
+        new_password: formValues.novaSenha,
+        user_type: userType,
+      };
       api
-        .post("/update-funcionario", formValues)
+        .post("/auth/update-password", reqValues)
         .then((response) => {
+          updateStorage();
           return setOpen(true);
         })
         .catch((error) => {
           setErrorMessage("Falha na requisição.");
         });
-    else setErrorMessage("Dados Inválidos. Tente novamente!");
+    } else setErrorMessage("Dados Inválidos. Tente novamente!");
   };
 
   return (
@@ -91,10 +110,10 @@ export default function ChangePassword() {
             margin="normal"
             required
             sx={{ width: "90%" }}
-            name="password"
+            name="currentPassword"
             label="Senha atual"
             type="password"
-            id="password"
+            id="currentPassword"
             autoComplete="current-password"
             value={formValues.senha}
             onChange={(event) => {
@@ -105,10 +124,10 @@ export default function ChangePassword() {
             margin="normal"
             required
             sx={{ width: "90%" }}
-            name="password"
+            name="newPassword"
             label="Nova senha"
-            type="password"
-            id="password"
+            type="newPassword"
+            id="newPassword"
             autoComplete="current-password"
             value={formValues.senha}
             onChange={(event) => {
@@ -119,11 +138,10 @@ export default function ChangePassword() {
             margin="normal"
             required
             sx={{ width: "90%" }}
-            name="password"
+            name="confirmPassword"
             label="Confirme a senha"
             type="password"
-            id="password"
-            autoComplete="current-password"
+            id="confirmPassword"
             value={formValues.senha}
             onChange={(event) => {
               handleFormChange(event.target.value, "confirmarNovaSenha");

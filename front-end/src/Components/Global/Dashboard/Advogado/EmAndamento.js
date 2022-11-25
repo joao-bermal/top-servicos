@@ -3,23 +3,21 @@ import { useEffect, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
-import { onChangeSelection } from "../../../features/selectedRows";
-import { onHandleUpdate } from "../../../features/handleUpdate";
+import { onHandleUpdate } from "../../../../features/handleUpdate";
 
-import Title from "../../Global/Title/index.js";
+import Title from "../../Title";
 import { Box, IconButton, Snackbar, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 
-import CustomToolbar from "./CustomToolbar";
+import RegularCustomToolbar from "../RegularCustomToolbar";
 
 export default function Historico() {
   const [rows, setRows] = useState([]);
   const [open, setOpen] = useState({ update: false, delete: false });
 
   const dispatch = useDispatch();
-  const selectedRows = useSelector((state) => state.selectedRows.value);
   const handleUpdate = useSelector((state) => state.handleUpdate.value);
 
   const api = axios.create({
@@ -40,6 +38,7 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
+      editable: true,
     },
     {
       field: "tipo",
@@ -47,6 +46,7 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
+      editable: true,
     },
     {
       field: "status",
@@ -64,6 +64,7 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
+      editable: true,
     },
     {
       field: "empresa_cnpj",
@@ -71,6 +72,7 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
+      editable: true,
     },
     {
       field: "funcionario_cpf",
@@ -78,6 +80,7 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
+      editable: true,
     },
     {
       field: "time_created",
@@ -85,6 +88,7 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
+      editable: true,
       valueGetter: (params) =>
         new Date(params.row.time_created).toLocaleDateString(),
     },
@@ -165,27 +169,31 @@ export default function Historico() {
 
   useEffect(() => {
     api
-      .get("/processos-finalizados")
+      .get("/processos-em-andamento")
       .then((response) => setRows(response.data));
   }, [handleUpdate]);
 
   return (
     <>
-      <Title>Processos finalizados</Title>
+      <Title>Processos em andamento</Title>
       <Box sx={{ mt: 2, height: "90%", width: "100%" }}>
         <DataGrid
+          columnBuffer={2}
+          columnThreshold={2}
           density="comfortable"
           rows={rows}
           columns={columns}
-          checkboxSelection
+          // checkboxSelection
           disableSelectionOnClick
-          onSelectionModelChange={(newSelectionModel) => {
-            dispatch(onChangeSelection(newSelectionModel));
-          }}
-          selectionModel={selectedRows}
           onCellEditCommit={handleRowEditCommit}
+          localeText={{
+            toolbarColumns: "Colunas",
+            toolbarFilters: "Filtros",
+            toolbarDensity: "Densidade",
+            toolbarExport: "Exportar",
+          }}
           components={{
-            Toolbar: CustomToolbar,
+            Toolbar: RegularCustomToolbar,
           }}
         />
         <Snackbar

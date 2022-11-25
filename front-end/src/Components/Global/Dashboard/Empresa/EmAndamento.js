@@ -3,15 +3,15 @@ import { useEffect, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
-import { onHandleUpdate } from "../../../features/handleUpdate";
+import { onHandleUpdate } from "../../../../features/handleUpdate";
 
-import Title from "../../Global/Title/index.js";
+import Title from "../../Title";
 import { Box, IconButton, Snackbar, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 
-import RegularCustomToolbar from "./RegularCustomToolbar";
+import RegularCustomToolbar from "../RegularCustomToolbar";
 
 export default function Historico() {
   const [rows, setRows] = useState([]);
@@ -186,6 +186,12 @@ export default function Historico() {
           // checkboxSelection
           disableSelectionOnClick
           onCellEditCommit={handleRowEditCommit}
+          localeText={{
+            toolbarColumns: "Colunas",
+            toolbarFilters: "Filtros",
+            toolbarDensity: "Densidade",
+            toolbarExport: "Exportar",
+          }}
           components={{
             Toolbar: RegularCustomToolbar,
           }}

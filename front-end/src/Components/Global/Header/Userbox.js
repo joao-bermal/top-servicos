@@ -25,6 +25,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
 
+import getUserType from "../../../Utils/getUserType";
 import isMobile from "../../../Utils/isMobile";
 
 function HeaderUserbox() {
@@ -48,7 +49,9 @@ function HeaderUserbox() {
   const UserAvatar = (props) => {
     return (
       <Avatar variant="rounded" alt={data.nome}>
-        {data.nome.substring(0, 1)}
+        {getUserType() == "Funcionário"
+          ? data.nome.substring(0, 1)
+          : data.razao_social.substring(0, 1)}
       </Avatar>
     );
   };
@@ -65,7 +68,7 @@ function HeaderUserbox() {
           }}
           variant="body1"
         >
-          {data.nome}
+          {getUserType() == "Funcionário" ? data.nome : data.razao_social}
         </Typography>
         <Typography
           sx={{
@@ -75,7 +78,9 @@ function HeaderUserbox() {
           }}
           variant="body2"
         >
-          Cargo: {data.cargo}
+          {getUserType() == "Funcionário"
+            ? `Cargo: ${data.cargo}`
+            : `CNPJ: ${data.cnpj}`}
         </Typography>
       </Box>
     );
@@ -93,7 +98,7 @@ function HeaderUserbox() {
           }}
           variant="body1"
         >
-          {data.nome}
+          {getUserType() == "Funcionário" ? data.nome : data.razao_social}
         </Typography>
         <Typography
           sx={{
@@ -103,7 +108,9 @@ function HeaderUserbox() {
           }}
           variant="body2"
         >
-          Cargo: {data.cargo}
+          {getUserType() == "Funcionário"
+            ? `Cargo: ${data.cargo}`
+            : `CNPJ: ${data.cnpj}`}
         </Typography>
       </Box>
     );

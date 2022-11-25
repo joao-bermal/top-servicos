@@ -37,9 +37,15 @@ def get_dados_funcionario_by_cpf(db: Session, cpf: str):
 
 def get_empresa_by_cnpj(db: Session, cnpj: str):
     return db.query(models.Empresa).filter(models.Empresa.cnpj == cnpj).first()
+
+def get_empresa_by_id(db: Session, id: int):
+    return db.query(models.Empresa).filter(models.Empresa.id == id).first()
     
 def get_funcionario_by_cpf(db: Session, cpf: str):
     return db.query(models.Funcionario).filter(models.Funcionario.cpf == cpf).first()
+
+def get_funcionario_by_id(db: Session, id: int):
+    return db.query(models.Funcionario).filter(models.Funcionario.id == id).first()
 
 def check_email_exists(db: Session, request: schemas.ForgotPassword):
     user_type = request.user_type
@@ -92,14 +98,6 @@ def create_funcionario(db: Session, funcionario: schemas.FuncionarioCreate):
     db.refresh(db_funcionario)
     return db_funcionario
 
-def update_funcionario(db: Session, funcionario: schemas.FuncionarioUpdate):
-    db.execute(
-        update(models.Funcionario)
-        .where(models.Funcionario.id == funcionario.id)
-        .values(nome = funcionario.nome, cpf = funcionario.cpf, email = funcionario.email, telefone = funcionario.telefone)
-    )
-    db.commit()
-    return {"Message": "Funcionario successfully updated"}
 
 def create_processo(db: Session, processo: schemas.ProcessoCreate):
     db_processo = models.Processo(
@@ -114,6 +112,15 @@ def create_processo(db: Session, processo: schemas.ProcessoCreate):
     db.commit()
     db.refresh(db_processo)
     return db_processo
+
+def update_funcionario(db: Session, funcionario: schemas.FuncionarioUpdate):
+    db.execute(
+        update(models.Funcionario)
+        .where(models.Funcionario.id == funcionario.id)
+        .values(nome = funcionario.nome, cpf = funcionario.cpf, email = funcionario.email, telefone = funcionario.telefone)
+    )
+    db.commit()
+    return {"Message": "Funcionario successfully updated"}
 
 def update_processo(db: Session, processo: schemas.ProcessoUpdate, id: str):
     if processo.updated_field == "nome":
@@ -182,7 +189,15 @@ def verify_reset_code(db: Session, reset_code: str):
 def reset_password(db: Session, request: schemas.ResetPassword):
     if request.user_type == "Empresa":
         db.execute(update(models.Empresa).where(models.Empresa.email == request.email).values(senha=request.new_password))
+    else:
+        db.execute(update(models.Funcionario).where(models.Funcionario.email == request.email).values(senha=request.new_password))
+    db.commit()
+    return {"message": "password successfully changed!"}
 
-    db.execute(update(models.Funcionario).where(models.Funcionario.email == request.email).values(senha=request.new_password))
+def update_password(db: Session, request: schemas.UserUpdatePass):
+    if request.user_type == "Empresa":
+        db.execute(update(models.Empresa).where(models.Empresa.id == request.id).values(senha=request.new_password))
+    else:
+        db.execute(update(models.Funcionario).where(models.Funcionario.id == request.id).values(senha=request.new_password))
     db.commit()
     return {"message": "password successfully changed!"}

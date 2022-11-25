@@ -2,6 +2,7 @@ import { styled } from "@mui/material/styles";
 
 import { Divider, List, Toolbar, IconButton } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
+import isMobile from "../../../Utils/isMobile";
 
 import Items from "./Items";
 
@@ -34,14 +35,15 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const Sidebar = ({ open }) => {
-  return (
-    <Drawer variant="permanent" open={open} sx={{ mt: 13 }}>
-      <List component="nav" sx={{ mt: 3 }}>
-        <Items />
-        <Divider sx={{ my: 2 }} />
-      </List>
-    </Drawer>
-  );
+  if (!isMobile())
+    return (
+      <Drawer variant="permanent" open={open} sx={{ mt: 13 }}>
+        <List component="nav" sx={{ mt: 3 }}>
+          <Items />
+          <Divider sx={{ my: 2 }} />
+        </List>
+      </Drawer>
+    );
 };
 
 export default Sidebar;

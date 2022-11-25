@@ -62,9 +62,17 @@ def get_empresas(db: Session = Depends(get_db)):
 def get_empresas_nome_cnpj(db: Session = Depends(get_db)):
     return crud.get_empresas_nome_cnpj(db=db)
 
+@app.get("/empresa/{id}", response_model=schemas.Empresa)
+def get_empresa_by_id(id: int, db: Session = Depends(get_db)):
+    return crud.get_empresa_by_id(id=id, db=db)
+
 @app.get("/funcionarios/", response_model=list[schemas.Funcionario])
 def get_funcionarios(db: Session = Depends(get_db)):
     return crud.get_funcionarios(db=db)
+
+@app.get("/funcionario/{id}", response_model=schemas.Funcionario)
+def get_funcionario_by_id(id: int, db: Session = Depends(get_db)):
+    return crud.get_funcionario_by_id(id=id, db=db)
 
 @app.get("/advogados-nome-cpf/", response_model=list[schemas.FuncionarioNomeCpf])
 def get_advogados_nome_cpf(db: Session = Depends(get_db)):
@@ -126,5 +134,9 @@ def reset_password(request: schemas.ResetPassword, db: Session = Depends(get_db)
     if not crud.verify_reset_code(db=db, reset_code=request.reset_code):
        raise HTTPException(status_code=401, detail="Unauthorized request.") 
     return crud.reset_password(db=db, request=request)
+
+@app.post("/auth/update-password")
+def update_password(request: schemas.UserUpdatePass, db: Session = Depends(get_db)):
+    return crud.update_password(db=db, request=request)
 # if __name__ == "__main__":
 #     uvicorn.run(app, host="0.0.0.0", port=8000)

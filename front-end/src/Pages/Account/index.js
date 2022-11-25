@@ -10,7 +10,7 @@ import {
 
 import Header from "../../Components/Global/Header";
 import ChangeProfileData from "../../Components/Global/Account/Content/ChangeProfileData";
-import Copyright from "../../Components/Copyright";
+import Copyright from "../../Components/Global/Copyright";
 
 function DashboardContent() {
   const [open, setOpen] = useState(true);
