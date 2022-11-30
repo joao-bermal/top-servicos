@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
+
+import {
+  Snackbar,
+  Alert,
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  Paper,
+  Box,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import { cnpjMask, telefoneMask } from "../Utils/masks";
-import useWindowSize from "../Utils/useWindowSize";
 import Copyright from "../Components/Global/Copyright";
+import useWindowSize from "../Utils/useWindowSize";
+import { cnpjMask, telefoneMask } from "../Utils/masks";
+import { cnpj } from "cpf-cnpj-validator";
 
 import axios from "axios";
-import { cnpj } from "cpf-cnpj-validator";
 
 const theme = createTheme();
 
@@ -37,13 +39,22 @@ export default function SignInSide() {
     senha: "",
     confirmaSenha: "",
   });
-  const [errorMessage, setErrorMessage] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const api = axios.create({
     baseURL: "http://localhost:8000",
   });
 
   const size = useWindowSize();
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
 
   const handleFormChange = (value, identifier) => {
     let newForm = { ...formValues };
@@ -65,14 +76,13 @@ export default function SignInSide() {
       api
         .post("/add-empresa", formValues)
         .then((response) => {
-          localStorage.setItem("user", response.data);
-          window.location.href = "/dashboard";
-          return;
+          localStorage.setItem("user", JSON.stringify(response.data));
+          return navigate("/dashboard");
         })
         .catch((error) => {
-          setErrorMessage("Falha na requisição.");
+          return setOpen(true);
         });
-    else setErrorMessage("Dados Inválidos. Tente novamente!");
+    else return setOpen(true);
   };
 
   useEffect(() => {
@@ -245,6 +255,21 @@ export default function SignInSide() {
               </Button>
               {/* add hover color as white */}
               <Copyright sx={{ mt: 5 }} />
+              <Snackbar
+                open={open}
+                autoHideDuration={3000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+              >
+                <Alert
+                  onClose={handleClose}
+                  variant="filled"
+                  severity="error"
+                  sx={{ width: "100%" }}
+                >
+                  Falha ao realizar o cadastro
+                </Alert>
+              </Snackbar>
             </Box>
           </Box>
         </Grid>

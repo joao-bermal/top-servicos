@@ -3,7 +3,7 @@ import ChangeProfileDataEmpresa from "./Empresa";
 import getUserType from "../../../../../Utils/getUserType";
 
 const ChangeProfileData = () => {
-  if (getUserType() == "Funcionário") <ChangeProfileDataFuncionario />;
+  if (getUserType() == "Funcionário") return <ChangeProfileDataFuncionario />;
   else return <ChangeProfileDataEmpresa />;
 };
 

@@ -12,11 +12,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 
-import CustomToolbar from "../CustomToolbar";
+import CustomToolbarProcessos from "../CustomToolbarProcessos";
 
 export default function Historico() {
   const [rows, setRows] = useState([]);
-  const [open, setOpen] = useState({ update: false, delete: false });
+  const [open, setOpen] = useState({
+    update: false,
+    delete: false,
+    error: false,
+  });
 
   const dispatch = useDispatch();
   const selectedRows = useSelector((state) => state.selectedRows.value);
@@ -37,21 +41,21 @@ export default function Historico() {
     {
       field: "nome",
       headerName: "Nome",
-      width: 150,
+      width: 200,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "tipo",
       headerName: "Tipo",
-      width: 150,
+      width: 100,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "status",
       headerName: "Status",
-      width: 120,
+      width: 100,
       editable: true,
       headerAlign: "center",
       align: "center",
@@ -61,20 +65,13 @@ export default function Historico() {
     {
       field: "descricao",
       headerName: "Descrição",
-      width: 150,
+      width: 300,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "empresa_cnpj",
       headerName: "CNPJ da Empresa",
-      width: 150,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "funcionario_cpf",
-      headerName: "CPF do Advogado",
       width: 150,
       headerAlign: "center",
       align: "center",
@@ -90,7 +87,9 @@ export default function Historico() {
     },
     {
       field: "delete",
+      disableExport: true,
       headerName: "",
+      width: 60,
       sortable: false,
       headerAlign: "center",
       align: "center",
@@ -114,7 +113,6 @@ export default function Historico() {
             .catch((error) => {
               console.log(error);
             });
-          // return alert(JSON.stringify(thisRow, null, 4));
         };
 
         return (
@@ -146,9 +144,15 @@ export default function Historico() {
     setOpenValue("delete", false);
   };
 
+  const handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenValue("error", false);
+  };
+
   const handleRowEditCommit = async (params) => {
     const updatedValues = {
-      // response_type: "finalizados",
       updated_field: params.field,
       updated_value: params.value,
     };
@@ -159,13 +163,14 @@ export default function Historico() {
         return setOpenValue("update", true);
       })
       .catch((error) => {
-        console.log(error);
+        setOpenValue("error", true);
       });
   };
 
   useEffect(() => {
+    const userId = JSON.parse(localStorage.getItem("user")).id;
     api
-      .get("/processos-finalizados")
+      .get(`/processos-finalizados-cpf/${userId}`)
       .then((response) => setRows(response.data));
   }, [handleUpdate]);
 
@@ -191,7 +196,7 @@ export default function Historico() {
             toolbarExport: "Exportar",
           }}
           components={{
-            Toolbar: CustomToolbar,
+            Toolbar: CustomToolbarProcessos,
           }}
         />
         <Snackbar
@@ -222,6 +227,21 @@ export default function Historico() {
             sx={{ width: "100%" }}
           >
             Campo deletado com sucesso!
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={open.error}
+          autoHideDuration={3000}
+          onClose={handleCloseError}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert
+            onClose={handleCloseError}
+            variant="filled"
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            Não foi possível concluir a operação.
           </Alert>
         </Snackbar>
       </Box>

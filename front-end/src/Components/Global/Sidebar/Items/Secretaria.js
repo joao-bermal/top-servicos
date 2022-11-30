@@ -9,21 +9,21 @@ import {
   ListSubheader,
 } from "@mui/material";
 
-import { Dashboard, ManageSearch, AddCircle } from "@mui/icons-material";
+import { Business, Contacts, Dashboard } from "@mui/icons-material";
 
 const SecretariaItems = () => {
   const dispatch = useDispatch();
   const [isContentSelected, setIsContentSelected] = React.useState({
-    emAndamento: true,
-    historico: false,
-    novoProcesso: false,
+    empresas: true,
+    advogados: false,
+    processos: false,
   });
 
   const selectContent = (identifier) => {
     let newState = {
-      emAndamento: false,
-      historico: false,
-      novoProcesso: false,
+      empresas: false,
+      advogados: false,
+      processos: false,
     };
     newState[identifier] = true;
     setIsContentSelected(newState);
@@ -32,43 +32,43 @@ const SecretariaItems = () => {
   return (
     <React.Fragment>
       <ListSubheader component="div" inset>
-        Processos
+        Gerenciamento
       </ListSubheader>
       <ListItemButton
-        selected={isContentSelected.emAndamento}
+        selected={isContentSelected.empresas}
         onClick={() => {
-          selectContent("emAndamento");
-          dispatch(onChangeContent("Em andamento"));
+          selectContent("empresas");
+          dispatch(onChangeContent("empresas"));
+        }}
+      >
+        <ListItemIcon>
+          <Business />
+        </ListItemIcon>
+        <ListItemText primary="Empresas" />
+      </ListItemButton>
+      <ListItemButton
+        selected={isContentSelected.advogados}
+        onClick={() => {
+          selectContent("advogados");
+          dispatch(onChangeContent("advogados"));
+        }}
+      >
+        <ListItemIcon>
+          <Contacts />
+        </ListItemIcon>
+        <ListItemText primary="Advogados" />
+      </ListItemButton>
+      <ListItemButton
+        selected={isContentSelected.processos}
+        onClick={() => {
+          selectContent("processos");
+          dispatch(onChangeContent("processos"));
         }}
       >
         <ListItemIcon>
           <Dashboard />
         </ListItemIcon>
-        <ListItemText primary="Em andamento" />
-      </ListItemButton>
-      <ListItemButton
-        selected={isContentSelected.historico}
-        onClick={() => {
-          selectContent("historico");
-          dispatch(onChangeContent("Histórico"));
-        }}
-      >
-        <ListItemIcon>
-          <ManageSearch />
-        </ListItemIcon>
-        <ListItemText primary="Histórico" />
-      </ListItemButton>
-      <ListItemButton
-        selected={isContentSelected.novoProcesso}
-        onClick={() => {
-          selectContent("novoProcesso");
-          dispatch(onChangeContent("Novo processo"));
-        }}
-      >
-        <ListItemIcon>
-          <AddCircle />
-        </ListItemIcon>
-        <ListItemText primary="Novo processo" />
+        <ListItemText primary="Processos" />
       </ListItemButton>
     </React.Fragment>
   );

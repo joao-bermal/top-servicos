@@ -38,19 +38,31 @@ export default function ChangeProfileDataFuncionario() {
     telefone: true,
   });
 
-  const [errorMessage, setErrorMessage] = useState("");
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState({ success: false, error: false });
   const navigate = useNavigate();
 
   const api = axios.create({
     baseURL: "http://localhost:8000",
   });
 
-  const handleClose = (event, reason) => {
+  const setOpenValue = (identifier, value) => {
+    let newValue = { ...open };
+    newValue[identifier] = value;
+    setOpen(newValue);
+  };
+
+  const handleCloseSuccess = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    setOpen(false);
+    setOpenValue("success", false);
+  };
+
+  const handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenValue("error", false);
   };
 
   const handleFormChange = (value, identifier) => {
@@ -76,12 +88,12 @@ export default function ChangeProfileDataFuncionario() {
         .post("/update-funcionario", formValues)
         .then((response) => {
           updateStorage();
-          return setOpen(true);
+          return setOpenValue("success", true);
         })
         .catch((error) => {
-          setErrorMessage("Falha na requisição.");
+          return setOpenValue("error", true);
         });
-    else setErrorMessage("Dados Inválidos. Tente novamente!");
+    else return setOpenValue("error", true);
   };
 
   return (
@@ -90,7 +102,7 @@ export default function ChangeProfileDataFuncionario() {
 
       <Box
         sx={{
-          mt: 3,
+          mt: 2,
           width: "100%",
           display: "flex",
           flexDirection: "column",
@@ -243,18 +255,33 @@ export default function ChangeProfileDataFuncionario() {
             Clique aqui para alterar a sua senha
           </Link>
           <Snackbar
-            open={open}
+            open={open.success}
             autoHideDuration={3000}
-            onClose={handleClose}
+            onClose={handleCloseSuccess}
             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
           >
             <Alert
-              onClose={handleClose}
+              onClose={handleCloseSuccess}
               variant="filled"
               severity="success"
               sx={{ width: "100%" }}
             >
               Dados alterados com sucesso!
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            open={open.error}
+            autoHideDuration={3000}
+            onClose={handleCloseError}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <Alert
+              onClose={handleCloseError}
+              variant="filled"
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              Não foi possível concluir a operação.
             </Alert>
           </Snackbar>
         </Box>

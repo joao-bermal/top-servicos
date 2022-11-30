@@ -16,18 +16,8 @@ const RegularCustomToolbar = () => {
         m: 1,
       }}
     >
-      <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
-
-      <GridToolbarExport
-        csvOptions={{
-          fileName: "processos-em-andamento",
-          delimiter: ";",
-          utf8WithBom: true,
-          allColumns: true,
-        }}
-      />
     </GridToolbarContainer>
   );
 };

@@ -9,19 +9,21 @@ import {
   ListSubheader,
 } from "@mui/material";
 
-import { Dashboard, ManageSearch, AddCircle } from "@mui/icons-material";
+import { Dashboard, ManageSearch, Contacts } from "@mui/icons-material";
 
 const EmpresaItems = () => {
   const dispatch = useDispatch();
   const [isContentSelected, setIsContentSelected] = React.useState({
     emAndamento: true,
     historico: false,
+    advogados: false,
   });
 
   const selectContent = (identifier) => {
     let newState = {
       emAndamento: false,
       historico: false,
+      advogados: false,
     };
     newState[identifier] = true;
     setIsContentSelected(newState);
@@ -55,6 +57,21 @@ const EmpresaItems = () => {
           <ManageSearch />
         </ListItemIcon>
         <ListItemText primary="Histórico" />
+      </ListItemButton>
+      <ListSubheader component="div" inset sx={{ mt: 2 }}>
+        Advogados
+      </ListSubheader>
+      <ListItemButton
+        selected={isContentSelected.advogados}
+        onClick={() => {
+          selectContent("advogados");
+          dispatch(onChangeContent("Advogados"));
+        }}
+      >
+        <ListItemIcon>
+          <Contacts />
+        </ListItemIcon>
+        <ListItemText primary="Contato" />
       </ListItemButton>
     </React.Fragment>
   );

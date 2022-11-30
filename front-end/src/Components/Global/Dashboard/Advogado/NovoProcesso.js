@@ -18,22 +18,33 @@ export default function NovoProcesso() {
     status: "Aberto",
     descricao: "",
     empresa_cnpj: "",
-    funcionario_cpf: "",
+    funcionario_cpf: JSON.parse(localStorage.getItem("user")).cpf,
   });
   const [empresas, setEmpresas] = useState([]);
-  const [advogados, setAdvogados] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState({ success: false, error: false });
 
   const api = axios.create({
     baseURL: "http://localhost:8000",
   });
 
-  const handleClose = (event, reason) => {
+  const setOpenValue = (identifier, value) => {
+    let newValue = { ...open };
+    newValue[identifier] = value;
+    setOpen(newValue);
+  };
+
+  const handleCloseSuccess = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    setOpen(false);
+    setOpenValue("success", false);
+  };
+
+  const handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenValue("error", false);
   };
 
   const handleFormChange = (value, identifier) => {
@@ -44,27 +55,21 @@ export default function NovoProcesso() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // let newForm = { ...formValues };
-    // newForm["empresa_cnpj"] = formValues.empresa_cnpj.slice(0, 18);
-    // newForm["funcionario_cpf"] = formValues.funcionario_cpf.slice(0, 14);
-    // // debugger;
-    // setFormValues(newForm);
     if (
       formValues.nome != "" &&
       formValues.tipo != "" &&
       formValues.descricao != "" &&
-      formValues.empresa_cnpj != "" &&
-      formValues.funcionario_cpf != ""
+      formValues.empresa_cnpj != ""
     )
       await api
         .post("/add-processo", formValues)
         .then((response) => {
-          return setOpen(true);
+          return setOpenValue("success", true);
         })
         .catch((error) => {
-          setErrorMessage("Falha na requisição.");
+          return setOpenValue("error", true);
         });
-    else setErrorMessage("Dados Inválidos. Tente novamente!");
+    else return setOpenValue("error", true);
   };
 
   useEffect(() => {
@@ -77,16 +82,6 @@ export default function NovoProcesso() {
         ]);
       });
     });
-
-    api.get("/advogados-nome-cpf").then((response) => {
-      const advogadosArray = response.data;
-      advogadosArray.map((advogado) => {
-        setAdvogados((current) => [
-          ...current,
-          `${advogado.cpf} (${advogado.nome})`,
-        ]);
-      });
-    });
   }, []);
 
   return (
@@ -94,7 +89,7 @@ export default function NovoProcesso() {
       <Title>Criar novo processo</Title>
       <Box
         sx={{
-          mt: 2,
+          mt: 8,
           height: "90%",
           width: "100%",
           display: "flex",
@@ -154,7 +149,6 @@ export default function NovoProcesso() {
             }}
           />
           <Autocomplete
-            // freeSolo
             sx={{ width: "90%", mt: 2 }}
             required
             disablePortal
@@ -167,20 +161,6 @@ export default function NovoProcesso() {
               <TextField {...params} label="CNPJ da empresa" />
             )}
           />
-          <Autocomplete
-            // freeSolo
-            sx={{ width: "90%", mt: 3 }}
-            required
-            disablePortal
-            id="funcionario_cpf"
-            options={advogados}
-            onChange={(event, newValue) => {
-              handleFormChange(newValue.slice(0, 14), "funcionario_cpf");
-            }}
-            renderInput={(params) => (
-              <TextField {...params} label="CPF do advogado encarregado" />
-            )}
-          />
           <Button
             type="submit"
             variant="contained"
@@ -189,20 +169,34 @@ export default function NovoProcesso() {
           >
             Criar
           </Button>
-          {/* add hover color as white */}
           <Snackbar
-            open={open}
+            open={open.success}
             autoHideDuration={3000}
-            onClose={handleClose}
+            onClose={handleCloseSuccess}
             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
           >
             <Alert
-              onClose={handleClose}
+              onClose={handleCloseSuccess}
               variant="filled"
               severity="success"
               sx={{ width: "100%" }}
             >
               Processo criado com sucesso!
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            open={open.error}
+            autoHideDuration={3000}
+            onClose={handleCloseError}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <Alert
+              onClose={handleCloseError}
+              variant="filled"
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              Erro ao criar o processo.
             </Alert>
           </Snackbar>
         </Box>

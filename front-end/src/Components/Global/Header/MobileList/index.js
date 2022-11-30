@@ -1,7 +1,15 @@
+import getUserType from "../../../../Utils/getUserType";
 import MobileListAdvogado from "./Advogado";
+import MobileListEmpresa from "./Empresa";
+import MobileListSecretaria from "./Secretaria";
 
 const MobileList = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  if (user.cargo == "Advogado") return <MobileListAdvogado />;
+  if (getUserType() === "Funcionário")
+    return JSON.parse(localStorage.getItem("user")).cargo === "Advogado" ? (
+      <MobileListAdvogado />
+    ) : (
+      <MobileListSecretaria />
+    );
+  else return <MobileListEmpresa />;
 };
 export default MobileList;

@@ -8,10 +8,6 @@ const AppBar = styled(MuiAppBar)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
   width: "100%",
   backgroundColor: "#000000",
-  // display: "flex",
-  // justifyContent: "space-between",
-  // alignItems: "center",
-  // flexDirection: "row",
 }));
 
 const drawerWidth = 240;
@@ -23,7 +19,6 @@ const Header = () => {
         <Box sx={{ my: 1 }}>
           <img
             src={process.env.PUBLIC_URL + "/horizontal_logo.png"}
-            // style={{ width: "75%", height: "92%" }}
             style={{ width: "70%", height: "88%" }}
           />
         </Box>

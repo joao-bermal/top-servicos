@@ -18,6 +18,8 @@ import AccountRoute from "./Routes/Account";
 import PasswordRoute from "./Routes/Password";
 import LoginAuth from "./Pages/Login/LoginAuth";
 import RequireAuth from "./Pages/Login/RequireAuth";
+import ForgotPasswordRoute from "./Routes/ForgotPassword";
+import ChangePasswordRoute from "./Routes/ChangePassword";
 
 const store = configureStore({
   reducer: {
@@ -82,6 +84,8 @@ root.render(
                 </RequireAuth>
               }
             />
+            <Route path="resetpassword" element={<ForgotPasswordRoute />} />
+            <Route path="changepassword" element={<ChangePasswordRoute />} />
           </Routes>
         </BrowserRouter>
       </Provider>

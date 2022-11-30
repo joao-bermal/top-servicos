@@ -126,7 +126,7 @@ export default function ChangePassword() {
             sx={{ width: "90%" }}
             name="newPassword"
             label="Nova senha"
-            type="newPassword"
+            type="password"
             id="newPassword"
             autoComplete="current-password"
             value={formValues.senha}

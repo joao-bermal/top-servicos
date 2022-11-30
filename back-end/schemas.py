@@ -21,6 +21,13 @@ class EmpresaNomeCnpj(BaseModel):
     razao_social: str
     cnpj: str
 
+class EmpresaUpdate(BaseModel):
+    id: int
+    razao_social: str
+    cnpj: str
+    email: str
+    telefone: str
+
 class FuncionarioBase(BaseModel):
     cpf: str
     senha: str
@@ -47,6 +54,12 @@ class FuncionarioNomeCpf(BaseModel):
     nome: str
     cpf: str
 
+class FuncionarioAdvogado(BaseModel):
+    id: int
+    nome: str
+    cpf: str
+    email: str
+    telefone: str
 
 class ProcessoBase(BaseModel):
     nome: str 
@@ -68,18 +81,17 @@ class Processo(ProcessoBase):
         orm_mode = True
 
 class ProcessoUpdate(BaseModel):
-    # response_type: str
     updated_field: str
     updated_value: str
 
-# class ProcessoDelete(BaseModel):
-#     response_type: str
+class ProcessoCnpj(BaseModel):
+    empresa_cnpj: str
 
 class ForgotPassword(BaseModel):
     user_type: str
-    email: str
+    cpf_cnpj: str
 
-class ResetPassword(ForgotPassword):
+class ResetPassword(BaseModel):
     reset_code: str
     new_password: str
 

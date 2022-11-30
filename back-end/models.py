@@ -50,5 +50,3 @@ class ForgotPassword(Base):
     id = Column(Integer, primary_key=True)
     email = Column(String)
     reset_code = Column(String)
-    status = Column(String(1))
-    expired_in = Column(DateTime(timezone=True), server_default=func.now())

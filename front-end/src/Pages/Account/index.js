@@ -37,7 +37,7 @@ function DashboardContent() {
         <Toolbar />
         <Container
           maxWidth={false}
-          sx={{ mt: 10, mb: 4, height: "78%", width: "60%" }}
+          sx={{ mt: 10, mb: 4, height: "78%", width: "90%" }}
         >
           <Grid container spacing={3} sx={{ height: "100%" }}>
             <Grid item xs={12} sx={{ height: "100%" }}>

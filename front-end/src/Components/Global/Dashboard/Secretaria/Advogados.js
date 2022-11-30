@@ -6,15 +6,17 @@ import { useSelector } from "react-redux";
 import { onChangeSelection } from "../../../../features/selectedRows";
 import { onHandleUpdate } from "../../../../features/handleUpdate";
 
-import Title from "../../Title";
+import Title from "../../Title/";
 import { Box, IconButton, Snackbar, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 
-import RegularCustomToolbar from "../RegularCustomToolbar";
+import AdvogadosToolbar from "../AdvogadosToolbar";
 
-export default function Historico() {
+import { cpfMask } from "../../../../Utils/masks";
+
+export default function Advogados() {
   const [rows, setRows] = useState([]);
   const [open, setOpen] = useState({ update: false, delete: false });
 
@@ -35,50 +37,46 @@ export default function Historico() {
       align: "center",
     },
     {
-      field: "nome",
-      headerName: "Nome",
-      width: 200,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "tipo",
-      headerName: "Tipo",
+      field: "cpf",
+      headerName: "CPF",
       width: 150,
       headerAlign: "center",
       align: "center",
+      valueParser: (value) => {
+        return cpfMask(value);
+      },
     },
     {
-      field: "status",
-      headerName: "Status",
-      width: 120,
+      field: "nome",
+      headerName: "Nome",
+      width: 250,
       headerAlign: "center",
       align: "center",
-      type: "singleSelect",
-      valueOptions: ["Aberto", "Em andamento", "Concluído", "Arquivado"],
+      editable: true,
     },
     {
-      field: "descricao",
-      headerName: "Descrição",
+      field: "email",
+      headerName: "Email",
       width: 300,
       headerAlign: "center",
       align: "center",
+      editable: true,
     },
     {
-      field: "funcionario_cpf",
-      headerName: "CPF do Advogado",
+      field: "telefone",
+      headerName: "Telefone",
       width: 150,
       headerAlign: "center",
       align: "center",
+      editable: true,
     },
     {
-      field: "time_created",
-      headerName: "Data de criação",
+      field: "senha",
+      headerName: "Senha",
       width: 150,
       headerAlign: "center",
       align: "center",
-      valueGetter: (params) =>
-        new Date(params.row.time_created).toLocaleDateString(),
+      editable: true,
     },
   ];
 
@@ -108,7 +106,7 @@ export default function Historico() {
       updated_value: params.value,
     };
     api
-      .put(`/update_processo/${params.id}`, updatedValues)
+      .put(`/update-advogado/${params.id}`, updatedValues)
       .then((response) => {
         dispatch(onHandleUpdate());
         return setOpenValue("update", true);
@@ -119,25 +117,18 @@ export default function Historico() {
   };
 
   useEffect(() => {
-    const userId = JSON.parse(localStorage.getItem("user")).id;
-    api
-      .get(`/processos-finalizados-cnpj/${userId}`)
-      .then((response) => setRows(response.data));
+    api.get("/advogados-all-info").then((response) => setRows(response.data));
   }, [handleUpdate]);
 
   return (
     <>
-      <Title>Meu histórico de processos</Title>
+      <Title>Gerenciamento de advogados</Title>
       <Box sx={{ mt: 2, height: "90%", width: "100%" }}>
         <DataGrid
           density="comfortable"
           rows={rows}
           columns={columns}
           disableSelectionOnClick
-          onSelectionModelChange={(newSelectionModel) => {
-            dispatch(onChangeSelection(newSelectionModel));
-          }}
-          selectionModel={selectedRows}
           onCellEditCommit={handleRowEditCommit}
           localeText={{
             toolbarColumns: "Colunas",
@@ -146,7 +137,7 @@ export default function Historico() {
             toolbarExport: "Exportar",
           }}
           components={{
-            Toolbar: RegularCustomToolbar,
+            Toolbar: AdvogadosToolbar,
           }}
         />
         <Snackbar

@@ -6,8 +6,8 @@ import NovoProcesso from "./NovoProcesso";
 
 const MainContentAdvogado = () => {
   const selectedContent = useSelector((state) => state.selectedContent.value);
-  if (selectedContent == "Histórico") return <Historico />;
-  else if (selectedContent == "Novo processo") return <NovoProcesso />;
+  if (selectedContent === "Histórico") return <Historico />;
+  else if (selectedContent === "Novo processo") return <NovoProcesso />;
   return <EmAndamento />;
 };
 

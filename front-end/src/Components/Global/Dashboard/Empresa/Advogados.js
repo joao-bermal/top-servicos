@@ -7,13 +7,13 @@ import { onHandleUpdate } from "../../../../features/handleUpdate";
 
 import Title from "../../Title";
 import { Box, IconButton, Snackbar, Alert } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import MailIcon from "@mui/icons-material/Mail";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 
-import RegularCustomToolbar from "../RegularCustomToolbar";
+import AdvogadosToolbar from "../AdvogadosToolbar";
 
-export default function Historico() {
+export default function Advogados() {
   const [rows, setRows] = useState([]);
   const [open, setOpen] = useState({ update: false, delete: false });
 
@@ -26,82 +26,47 @@ export default function Historico() {
 
   const columns = [
     {
-      field: "id",
-      headerName: "ID",
-      width: 60,
+      field: "cpf",
+      headerName: "CPF",
+      width: 150,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "nome",
       headerName: "Nome",
-      width: 150,
+      width: 300,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "email",
+      headerName: "Email",
+      width: 300,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "telefone",
+      headerName: "Telefone",
+      width: 300,
       headerAlign: "center",
       align: "center",
       editable: true,
     },
     {
-      field: "tipo",
-      headerName: "Tipo",
-      width: 150,
-      headerAlign: "center",
-      align: "center",
-      editable: true,
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 120,
-      editable: true,
-      headerAlign: "center",
-      align: "center",
-      type: "singleSelect",
-      valueOptions: ["Aberto", "Em andamento", "Concluído", "Arquivado"],
-    },
-    {
-      field: "descricao",
-      headerName: "Descrição",
-      width: 150,
-      headerAlign: "center",
-      align: "center",
-      editable: true,
-    },
-    {
-      field: "empresa_cnpj",
-      headerName: "CNPJ da Empresa",
-      width: 150,
-      headerAlign: "center",
-      align: "center",
-      editable: true,
-    },
-    {
-      field: "funcionario_cpf",
-      headerName: "CPF do Advogado",
-      width: 150,
-      headerAlign: "center",
-      align: "center",
-      editable: true,
-    },
-    {
-      field: "time_created",
-      headerName: "Data de criação",
-      width: 150,
-      headerAlign: "center",
-      align: "center",
-      editable: true,
-      valueGetter: (params) =>
-        new Date(params.row.time_created).toLocaleDateString(),
-    },
-    {
-      field: "delete",
+      field: "emailButton",
+      disableExport: true,
       headerName: "",
       sortable: false,
       headerAlign: "center",
       align: "center",
       renderCell: (params) => {
-        const onClick = (e) => {
+        const getUrl = (e) => {
           const gridApi = params.api;
           const thisRow = {};
+          const email = {};
+          const user = JSON.parse(localStorage.getItem("user"));
 
           gridApi
             .getAllColumns()
@@ -109,21 +74,20 @@ export default function Historico() {
             .forEach(
               (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
             );
-          api
-            .delete(`/delete-processo/${thisRow.id}`)
-            .then((response) => {
-              dispatch(onHandleUpdate());
-              return setOpenValue("delete", true);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-          // return alert(JSON.stringify(thisRow, null, 4));
+
+          email["cc"] = thisRow.email;
+          email["subject"] = `Contato de ${user.razao_social}`;
+          email[
+            "body"
+          ] = `Olá, eu sou da ${user.razao_social} e gostaria de entrar em contato.`;
+
+          const url = `mailto:${email.cc}?subject=${email.subject}&body=${email.body}`;
+          return url;
         };
 
         return (
-          <IconButton aria-label="delete" color="error" onClick={onClick}>
-            <CloseIcon />
+          <IconButton aria-label="email" target="_blank" href={getUrl()}>
+            <MailIcon />
           </IconButton>
         );
       },
@@ -152,7 +116,6 @@ export default function Historico() {
 
   const handleRowEditCommit = async (params) => {
     const updatedValues = {
-      // response_type: "finalizados",
       updated_field: params.field,
       updated_value: params.value,
     };
@@ -168,14 +131,12 @@ export default function Historico() {
   };
 
   useEffect(() => {
-    api
-      .get("/processos-em-andamento")
-      .then((response) => setRows(response.data));
+    api.get("/advogados").then((response) => setRows(response.data));
   }, [handleUpdate]);
 
   return (
     <>
-      <Title>Processos em andamento</Title>
+      <Title>Advogados da Topservicos</Title>
       <Box sx={{ mt: 2, height: "90%", width: "100%" }}>
         <DataGrid
           columnBuffer={2}
@@ -183,17 +144,14 @@ export default function Historico() {
           density="comfortable"
           rows={rows}
           columns={columns}
-          // checkboxSelection
           disableSelectionOnClick
           onCellEditCommit={handleRowEditCommit}
           localeText={{
-            toolbarColumns: "Colunas",
             toolbarFilters: "Filtros",
             toolbarDensity: "Densidade",
-            toolbarExport: "Exportar",
           }}
           components={{
-            Toolbar: RegularCustomToolbar,
+            Toolbar: AdvogadosToolbar,
           }}
         />
         <Snackbar

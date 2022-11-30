@@ -6,15 +6,17 @@ import { useSelector } from "react-redux";
 import { onChangeSelection } from "../../../../features/selectedRows";
 import { onHandleUpdate } from "../../../../features/handleUpdate";
 
-import Title from "../../Title";
+import Title from "../../Title/";
 import { Box, IconButton, Snackbar, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 
-import CustomToolbar from "../CustomToolbar";
+import AdvogadosToolbar from "../AdvogadosToolbar";
 
-export default function Historico() {
+import { cnpjMask } from "../../../../Utils/masks";
+
+export default function Empresas() {
   const [rows, setRows] = useState([]);
   const [open, setOpen] = useState({ update: false, delete: false });
 
@@ -35,94 +37,46 @@ export default function Historico() {
       align: "center",
     },
     {
-      field: "nome",
-      headerName: "Nome",
+      field: "cnpj",
+      headerName: "CNPJ",
       width: 150,
       headerAlign: "center",
       align: "center",
-    },
-    {
-      field: "tipo",
-      headerName: "Tipo",
-      width: 150,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 120,
-      editable: true,
-      headerAlign: "center",
-      align: "center",
-      type: "singleSelect",
-      valueOptions: ["Aberto", "Em andamento", "Concluído", "Arquivado"],
-    },
-    {
-      field: "descricao",
-      headerName: "Descrição",
-      width: 150,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "empresa_cnpj",
-      headerName: "CNPJ da Empresa",
-      width: 150,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "funcionario_cpf",
-      headerName: "CPF do Advogado",
-      width: 150,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "time_created",
-      headerName: "Data de criação",
-      width: 150,
-      headerAlign: "center",
-      align: "center",
-      valueGetter: (params) =>
-        new Date(params.row.time_created).toLocaleDateString(),
-    },
-    {
-      field: "delete",
-      headerName: "",
-      sortable: false,
-      headerAlign: "center",
-      align: "center",
-      renderCell: (params) => {
-        const onClick = (e) => {
-          const gridApi = params.api;
-          const thisRow = {};
-
-          gridApi
-            .getAllColumns()
-            .filter((c) => c.field !== "__check__" && !!c)
-            .forEach(
-              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-            );
-          api
-            .delete(`/delete-processo/${thisRow.id}`)
-            .then((response) => {
-              dispatch(onHandleUpdate());
-              return setOpenValue("delete", true);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-          // return alert(JSON.stringify(thisRow, null, 4));
-        };
-
-        return (
-          <IconButton aria-label="delete" color="error" onClick={onClick}>
-            <CloseIcon />
-          </IconButton>
-        );
+      valueParser: (value) => {
+        return cnpjMask(value);
       },
+    },
+    {
+      field: "razao_social",
+      headerName: "Razão social",
+      width: 250,
+      headerAlign: "center",
+      align: "center",
+      editable: true,
+    },
+    {
+      field: "email",
+      headerName: "Email",
+      width: 300,
+      headerAlign: "center",
+      align: "center",
+      editable: true,
+    },
+    {
+      field: "telefone",
+      headerName: "Telefone",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+      editable: true,
+    },
+    {
+      field: "senha",
+      headerName: "Senha",
+      width: 150,
+      headerAlign: "center",
+      align: "center",
+      editable: true,
     },
   ];
 
@@ -148,12 +102,11 @@ export default function Historico() {
 
   const handleRowEditCommit = async (params) => {
     const updatedValues = {
-      // response_type: "finalizados",
       updated_field: params.field,
       updated_value: params.value,
     };
     api
-      .put(`/update_processo/${params.id}`, updatedValues)
+      .put(`/update-empresa/${params.id}`, updatedValues)
       .then((response) => {
         dispatch(onHandleUpdate());
         return setOpenValue("update", true);
@@ -164,25 +117,18 @@ export default function Historico() {
   };
 
   useEffect(() => {
-    api
-      .get("/processos-finalizados")
-      .then((response) => setRows(response.data));
+    api.get("/empresas-all-info").then((response) => setRows(response.data));
   }, [handleUpdate]);
 
   return (
     <>
-      <Title>Processos finalizados</Title>
+      <Title>Gerenciamento de empresas</Title>
       <Box sx={{ mt: 2, height: "90%", width: "100%" }}>
         <DataGrid
           density="comfortable"
           rows={rows}
           columns={columns}
-          checkboxSelection
           disableSelectionOnClick
-          onSelectionModelChange={(newSelectionModel) => {
-            dispatch(onChangeSelection(newSelectionModel));
-          }}
-          selectionModel={selectedRows}
           onCellEditCommit={handleRowEditCommit}
           localeText={{
             toolbarColumns: "Colunas",
@@ -191,7 +137,7 @@ export default function Historico() {
             toolbarExport: "Exportar",
           }}
           components={{
-            Toolbar: CustomToolbar,
+            Toolbar: AdvogadosToolbar,
           }}
         />
         <Snackbar

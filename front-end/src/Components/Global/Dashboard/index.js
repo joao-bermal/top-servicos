@@ -4,8 +4,8 @@ import MainContentEmpresa from "./Empresa";
 import MainContentSecretaria from "./Secretaria";
 
 const MainContent = () => {
-  if (getUserType() == "Funcionário")
-    JSON.parse(localStorage.getItem("user")).cargo == "Advogado" ? (
+  if (getUserType() === "Funcionário")
+    return JSON.parse(localStorage.getItem("user")).cargo === "Advogado" ? (
       <MainContentAdvogado />
     ) : (
       <MainContentSecretaria />

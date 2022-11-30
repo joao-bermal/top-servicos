@@ -4,12 +4,12 @@ import SecretariaItems from "./Secretaria";
 import getUserType from "../../../../Utils/getUserType";
 
 const Items = () => {
-  if (getUserType() == "Funcionário")
-    JSON.parse(localStorage.getItem("user")).cargo == "Advogado" ? (
+  if (getUserType() === "Funcionário") {
+    return JSON.parse(localStorage.getItem("user")).cargo === "Advogado" ? (
       <AdvogadoItems />
     ) : (
       <SecretariaItems />
     );
-  else return <EmpresaItems />;
+  } else return <EmpresaItems />;
 };
 export default Items;

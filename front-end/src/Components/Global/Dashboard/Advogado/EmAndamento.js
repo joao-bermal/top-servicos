@@ -14,8 +14,14 @@ import axios from "axios";
 import RegularCustomToolbar from "../RegularCustomToolbar";
 
 export default function Historico() {
+  const [empresas, setEmpresas] = useState([]);
+
   const [rows, setRows] = useState([]);
-  const [open, setOpen] = useState({ update: false, delete: false });
+  const [open, setOpen] = useState({
+    update: false,
+    delete: false,
+    error: false,
+  });
 
   const dispatch = useDispatch();
   const handleUpdate = useSelector((state) => state.handleUpdate.value);
@@ -35,7 +41,7 @@ export default function Historico() {
     {
       field: "nome",
       headerName: "Nome",
-      width: 150,
+      width: 200,
       headerAlign: "center",
       align: "center",
       editable: true,
@@ -51,7 +57,7 @@ export default function Historico() {
     {
       field: "status",
       headerName: "Status",
-      width: 120,
+      width: 100,
       editable: true,
       headerAlign: "center",
       align: "center",
@@ -61,7 +67,7 @@ export default function Historico() {
     {
       field: "descricao",
       headerName: "Descrição",
-      width: 150,
+      width: 300,
       headerAlign: "center",
       align: "center",
       editable: true,
@@ -73,14 +79,8 @@ export default function Historico() {
       headerAlign: "center",
       align: "center",
       editable: true,
-    },
-    {
-      field: "funcionario_cpf",
-      headerName: "CPF do Advogado",
-      width: 150,
-      headerAlign: "center",
-      align: "center",
-      editable: true,
+      type: "singleSelect",
+      valueOptions: empresas,
     },
     {
       field: "time_created",
@@ -88,13 +88,14 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
-      editable: true,
       valueGetter: (params) =>
         new Date(params.row.time_created).toLocaleDateString(),
     },
     {
       field: "delete",
+      disableExport: true,
       headerName: "",
+      width: 60,
       sortable: false,
       headerAlign: "center",
       align: "center",
@@ -116,9 +117,8 @@ export default function Historico() {
               return setOpenValue("delete", true);
             })
             .catch((error) => {
-              console.log(error);
+              setOpenValue("error", true);
             });
-          // return alert(JSON.stringify(thisRow, null, 4));
         };
 
         return (
@@ -150,9 +150,15 @@ export default function Historico() {
     setOpenValue("delete", false);
   };
 
+  const handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenValue("error", false);
+  };
+
   const handleRowEditCommit = async (params) => {
     const updatedValues = {
-      // response_type: "finalizados",
       updated_field: params.field,
       updated_value: params.value,
     };
@@ -163,14 +169,23 @@ export default function Historico() {
         return setOpenValue("update", true);
       })
       .catch((error) => {
-        console.log(error);
+        setOpenValue("error", true);
       });
   };
 
   useEffect(() => {
+    setEmpresas([]);
+    const userId = JSON.parse(localStorage.getItem("user")).id;
     api
-      .get("/processos-em-andamento")
+      .get(`/processos-em-andamento-cpf/${userId}`)
       .then((response) => setRows(response.data));
+
+    api.get("/empresas-nome-cnpj").then((response) => {
+      const empresasArray = response.data;
+      empresasArray.map((empresa) => {
+        setEmpresas((current) => [...current, `${empresa.cnpj}`]);
+      });
+    });
   }, [handleUpdate]);
 
   return (
@@ -183,7 +198,6 @@ export default function Historico() {
           density="comfortable"
           rows={rows}
           columns={columns}
-          // checkboxSelection
           disableSelectionOnClick
           onCellEditCommit={handleRowEditCommit}
           localeText={{
@@ -224,6 +238,21 @@ export default function Historico() {
             sx={{ width: "100%" }}
           >
             Campo deletado com sucesso!
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={open.error}
+          autoHideDuration={3000}
+          onClose={handleCloseError}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert
+            onClose={handleCloseError}
+            variant="filled"
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            Não foi possível concluir a operação.
           </Alert>
         </Snackbar>
       </Box>

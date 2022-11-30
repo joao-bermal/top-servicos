@@ -17,7 +17,7 @@ import {
 import { Button, Snackbar, Alert } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const CustomToolbar = () => {
+const CustomToolbarAdvogados = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -35,13 +35,13 @@ const CustomToolbar = () => {
 
   const getParamsUrl = (array) => {
     let paramsUrl = "";
-    array.map((item) => (paramsUrl = paramsUrl + `listProcessos=${item}&`));
+    array.map((item) => (paramsUrl = paramsUrl + `listAdvogados=${item}&`));
     return paramsUrl;
   };
 
   const toggleDeleteRows = () => {
     api
-      .delete(`/delete-processos/?${getParamsUrl(selectedRows)}`)
+      .delete(`/delete-advogados/?${getParamsUrl(selectedRows)}`)
       .then((response) => {
         dispatch(onHandleUpdate());
         return setOpen(true);
@@ -65,9 +65,10 @@ const CustomToolbar = () => {
 
       <GridToolbarExport
         csvOptions={{
-          fileName: "historico-de-processos",
+          fileName: "advogados",
           delimiter: ";",
           utf8WithBom: true,
+          allColumns: true,
         }}
       />
       <Button
@@ -97,4 +98,4 @@ const CustomToolbar = () => {
   );
 };
 
-export default CustomToolbar;
+export default CustomToolbarAdvogados;

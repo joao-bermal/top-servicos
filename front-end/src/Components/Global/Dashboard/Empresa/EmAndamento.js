@@ -35,10 +35,9 @@ export default function Historico() {
     {
       field: "nome",
       headerName: "Nome",
-      width: 150,
+      width: 200,
       headerAlign: "center",
       align: "center",
-      editable: true,
     },
     {
       field: "tipo",
@@ -46,13 +45,11 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
-      editable: true,
     },
     {
       field: "status",
       headerName: "Status",
       width: 120,
-      editable: true,
       headerAlign: "center",
       align: "center",
       type: "singleSelect",
@@ -61,18 +58,9 @@ export default function Historico() {
     {
       field: "descricao",
       headerName: "Descrição",
-      width: 150,
+      width: 300,
       headerAlign: "center",
       align: "center",
-      editable: true,
-    },
-    {
-      field: "empresa_cnpj",
-      headerName: "CNPJ da Empresa",
-      width: 150,
-      headerAlign: "center",
-      align: "center",
-      editable: true,
     },
     {
       field: "funcionario_cpf",
@@ -80,7 +68,6 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
-      editable: true,
     },
     {
       field: "time_created",
@@ -88,45 +75,8 @@ export default function Historico() {
       width: 150,
       headerAlign: "center",
       align: "center",
-      editable: true,
       valueGetter: (params) =>
         new Date(params.row.time_created).toLocaleDateString(),
-    },
-    {
-      field: "delete",
-      headerName: "",
-      sortable: false,
-      headerAlign: "center",
-      align: "center",
-      renderCell: (params) => {
-        const onClick = (e) => {
-          const gridApi = params.api;
-          const thisRow = {};
-
-          gridApi
-            .getAllColumns()
-            .filter((c) => c.field !== "__check__" && !!c)
-            .forEach(
-              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-            );
-          api
-            .delete(`/delete-processo/${thisRow.id}`)
-            .then((response) => {
-              dispatch(onHandleUpdate());
-              return setOpenValue("delete", true);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-          // return alert(JSON.stringify(thisRow, null, 4));
-        };
-
-        return (
-          <IconButton aria-label="delete" color="error" onClick={onClick}>
-            <CloseIcon />
-          </IconButton>
-        );
-      },
     },
   ];
 
@@ -152,7 +102,6 @@ export default function Historico() {
 
   const handleRowEditCommit = async (params) => {
     const updatedValues = {
-      // response_type: "finalizados",
       updated_field: params.field,
       updated_value: params.value,
     };
@@ -168,14 +117,15 @@ export default function Historico() {
   };
 
   useEffect(() => {
+    const userId = JSON.parse(localStorage.getItem("user")).id;
     api
-      .get("/processos-em-andamento")
+      .get(`/processos-em-andamento-cnpj/${userId}`)
       .then((response) => setRows(response.data));
   }, [handleUpdate]);
 
   return (
     <>
-      <Title>Processos em andamento</Title>
+      <Title>Meus processos em andamento</Title>
       <Box sx={{ mt: 2, height: "90%", width: "100%" }}>
         <DataGrid
           columnBuffer={2}
@@ -183,7 +133,6 @@ export default function Historico() {
           density="comfortable"
           rows={rows}
           columns={columns}
-          // checkboxSelection
           disableSelectionOnClick
           onCellEditCommit={handleRowEditCommit}
           localeText={{
