@@ -1,7 +1,5 @@
 import {
   GridToolbarContainer,
-  GridToolbarExport,
-  GridToolbarColumnsButton,
   GridToolbarFilterButton,
   GridToolbarDensitySelector,
 } from "@mui/x-data-grid";
@@ -16,8 +14,8 @@ const RegularCustomToolbar = () => {
         m: 1,
       }}
     >
-      <GridToolbarFilterButton />
-      <GridToolbarDensitySelector />
+      <GridToolbarFilterButton sx={{ color: "#0000EE" }} />
+      <GridToolbarDensitySelector sx={{ color: "#0000EE" }} />
     </GridToolbarContainer>
   );
 };
