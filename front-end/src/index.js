@@ -29,15 +29,15 @@ const store = configureStore({
   },
 });
 
-const mdTheme = createTheme();
+// const mdTheme = createTheme();
 
-// const mdTheme = createTheme({
-//   palette: {
-//     primary: {
-//       main: "#555555",
-//     },
-//   },
-// });
+const mdTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#424242",
+    },
+  },
+});
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(

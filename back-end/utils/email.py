@@ -1,11 +1,15 @@
+import os
 import smtplib
 
+from dotenv import load_dotenv
+
+load_dotenv(".env")
 
 def send_email(email: str, reset_code: str):
-    smtp_server = "smtp.gmail.com"
-    port = 587
-    sender_email = "topservicos.advocacia@gmail.com"
-    password = "dkfevgftbawtiast"
+    smtp_server = os.environ["EMAIL_SMPT_SERVER"]
+    port = os.environ["EMAIL_PORT"]
+    sender_email = os.environ["EMAIL_SENDER"]
+    password = os.environ["EMAIL_PASSWORD"]
     receiver_email = email
     message = reset_code
 

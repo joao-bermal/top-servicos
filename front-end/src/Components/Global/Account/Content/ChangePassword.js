@@ -34,7 +34,7 @@ export default function ChangePassword() {
   const navigate = useNavigate();
 
   const api = axios.create({
-    baseURL: "http://localhost:8000",
+    baseURL: process.env.REACT_APP_API_DEV_ADDRESS,
   });
 
   const handleClose = (event, reason) => {

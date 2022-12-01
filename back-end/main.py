@@ -1,6 +1,8 @@
+import os
 import random
 from typing import List
 
+from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -10,13 +12,15 @@ from crud import models, schemas
 from database import SessionLocal, engine
 from utils import email
 
+load_dotenv(".env")
+
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000",
-    "localhost:3000"
+    os.environ["FRONTEND_DEV_ADDRESS"],
+    os.environ["FRONTEND_PROD_ADDRESS"]
 ]
 
 

@@ -23,7 +23,7 @@ const CustomToolbarProcessos = () => {
 
   const selectedRows = useSelector((state) => state.selectedRows.value);
   const api = axios.create({
-    baseURL: "http://localhost:8000",
+    baseURL: process.env.REACT_APP_API_DEV_ADDRESS,
   });
 
   const handleCloseDelete = (event, reason) => {
@@ -59,11 +59,12 @@ const CustomToolbarProcessos = () => {
         m: 1,
       }}
     >
-      <GridToolbarColumnsButton />
-      <GridToolbarFilterButton />
-      <GridToolbarDensitySelector />
+      <GridToolbarColumnsButton sx={{ color: "#0000EE" }} />
+      <GridToolbarFilterButton sx={{ color: "#0000EE" }} />
+      <GridToolbarDensitySelector sx={{ color: "#0000EE" }} />
 
       <GridToolbarExport
+        sx={{ color: "#0000EE" }}
         csvOptions={{
           fileName: "processos",
           delimiter: ";",
@@ -72,7 +73,7 @@ const CustomToolbarProcessos = () => {
         }}
       />
       <Button
-        color="primary"
+        sx={{ color: "#0000EE" }}
         size="small"
         startIcon={<DeleteIcon />}
         onClick={toggleDeleteRows}

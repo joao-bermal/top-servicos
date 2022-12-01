@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Snackbar,
@@ -7,13 +7,13 @@ import {
   Button,
   CssBaseline,
   TextField,
-  Link,
   Paper,
   Box,
   Grid,
   Typography,
   CircularProgress,
 } from "@mui/material";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 
 import Copyright from "../../Components/Global/Copyright";
 import { cpfCnpjMask } from "../../Utils/masks";
@@ -31,7 +31,7 @@ const ForgotPassword = () => {
   const navigate = useNavigate();
 
   const api = axios.create({
-    baseURL: "http://localhost:8000",
+    baseURL: process.env.REACT_APP_API_DEV_ADDRESS,
   });
 
   const setOpenValue = (identifier, value) => {
@@ -106,22 +106,43 @@ const ForgotPassword = () => {
             justifyContent: "center",
           }}
         >
-          <Avatar
-            sx={{ m: 1, bgcolor: "#ffffff", width: "14%", height: "15%" }}
-          >
-            <img src="white-logo.png" style={{ width: "65%" }} />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Bem-vindo de volta!
-            <br />
-          </Typography>
-          <Typography component="h2">Recupere sua conta Topservicos</Typography>
           <Box
             component="form"
             noValidate
             onSubmit={handleSubmit}
-            sx={{ mt: 1, width: "60%" }}
+            sx={{ width: "60%" }}
           >
+            <Button
+              variant="outlined"
+              startIcon={<KeyboardBackspaceIcon />}
+              sx={{ mb: 5 }}
+              color="inherit"
+              onClick={() => navigate("/login")}
+            >
+              Voltar
+            </Button>
+            <Box
+              sx={{
+                display: "flex",
+                width: "100%",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Avatar
+                sx={{ m: 1, bgcolor: "#ffffff", width: "14%", height: "15%" }}
+              >
+                <img src="white-logo.png" style={{ width: "65%" }} />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Bem-vindo de volta!
+                <br />
+              </Typography>
+              <Typography component="h2">
+                Recupere sua conta Topservicos
+              </Typography>
+            </Box>
             <TextField
               margin="normal"
               required

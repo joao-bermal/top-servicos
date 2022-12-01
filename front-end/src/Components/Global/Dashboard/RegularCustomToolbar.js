@@ -16,11 +16,12 @@ const RegularCustomToolbar = () => {
         m: 1,
       }}
     >
-      <GridToolbarColumnsButton />
-      <GridToolbarFilterButton />
-      <GridToolbarDensitySelector />
+      <GridToolbarColumnsButton sx={{ color: "#0000EE" }} />
+      <GridToolbarFilterButton sx={{ color: "#0000EE" }} />
+      <GridToolbarDensitySelector sx={{ color: "#0000EE" }} />
 
       <GridToolbarExport
+        sx={{ color: "#0000EE" }}
         csvOptions={{
           fileName: "processos-em-andamento",
           delimiter: ";",

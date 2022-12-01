@@ -2,7 +2,7 @@ import axios from "axios";
 
 const updateStorage = () => {
   const api = axios.create({
-    baseURL: "http://localhost:8000",
+    baseURL: process.env.REACT_APP_API_DEV_ADDRESS,
   });
   const user = JSON.parse(localStorage.getItem("user"));
   let userType = "";

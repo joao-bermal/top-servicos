@@ -24,7 +24,7 @@ export default function NovoProcesso() {
   const [open, setOpen] = useState({ success: false, error: false });
 
   const api = axios.create({
-    baseURL: "http://localhost:8000",
+    baseURL: process.env.REACT_APP_API_DEV_ADDRESS,
   });
 
   const setOpenValue = (identifier, value) => {

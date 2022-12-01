@@ -38,7 +38,7 @@ export default function SignInSide() {
   const navigate = useNavigate();
 
   const api = axios.create({
-    baseURL: "http://localhost:8000",
+    baseURL: process.env.REACT_APP_API_DEV_ADDRESS,
   });
 
   const handleClose = (event, reason) => {
@@ -188,14 +188,6 @@ export default function SignInSide() {
                 handleFormChange(event.target.value, "senha");
               }}
             />
-            <Link
-              component="button"
-              variant="body2"
-              sx={{ mt: 1 }}
-              onClick={() => navigate("/resetpassword")}
-            >
-              Esqueceu a senha?
-            </Link>
             <Button
               type="submit"
               fullWidth
@@ -204,6 +196,14 @@ export default function SignInSide() {
             >
               Entrar
             </Button>
+            <Link
+              component="button"
+              variant="body2"
+              sx={{ mt: 1, color: "#0000EE" }}
+              onClick={() => navigate("/resetpassword")}
+            >
+              Esqueceu a senha?
+            </Link>
             <Box
               sx={{
                 mt: 1,
@@ -215,7 +215,7 @@ export default function SignInSide() {
               <Link
                 component="button"
                 variant="body2"
-                sx={{ mr: "auto" }}
+                sx={{ mr: "auto", color: "#0000EE" }}
                 onClick={() => navigate("/cadastro-empresa")}
               >
                 Cadastre-se como empresa aqui
@@ -223,7 +223,7 @@ export default function SignInSide() {
               <Link
                 component="button"
                 variant="body2"
-                sx={{ ml: "auto" }}
+                sx={{ ml: "auto", color: "#0000EE" }}
                 onClick={() => navigate("/cadastro-funcionario")}
               >
                 Cadastre-se como funcionário aqui

@@ -21,7 +21,7 @@ export default function Historico() {
   const handleUpdate = useSelector((state) => state.handleUpdate.value);
 
   const api = axios.create({
-    baseURL: "http://localhost:8000",
+    baseURL: process.env.REACT_APP_API_DEV_ADDRESS,
   });
 
   const columns = [
