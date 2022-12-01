@@ -10,6 +10,7 @@ function createWindow() {
     width: 1366,
     height: 768,
     webPreferences: { enableRemoteModule: true },
+    icon: __dirname + "/favicon.ico",
   });
 
   win.setMenuBarVisibility(false);
